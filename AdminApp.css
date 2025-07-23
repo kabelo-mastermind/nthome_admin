@@ -1,0 +1,121 @@
+/* General layout for the grid container */
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr; /* Default to single column on small screens */
+  grid-template-rows: auto 1fr; /* Header row, then main content row */
+  height: 100vh; /* Full viewport height */
+  overflow: hidden; /* Prevent scrollbars on the container itself */
+}
+
+/* Desktop layout: Sidebar on the left, main content on the right */
+@media (min-width: 768px) {
+  .grid-container {
+    grid-template-columns: 260px 1fr; /* Sidebar width + main content */
+    grid-template-rows: auto 1fr; /* Header row, then main content row */
+  }
+
+  .grid-container.sidebar-open {
+    grid-template-columns: 260px 1fr; /* Ensure sidebar is open */
+  }
+
+  /* When sidebar is closed (e.g., for a collapsed view, if you implement it) */
+  /* You might want to adjust this if you have a "collapsed icon" state */
+  /* .grid-container:not(.sidebar-open) {
+    grid-template-columns: 60px 1fr; // Example for collapsed icon width
+  } */
+}
+
+/* Header spans across all columns */
+.header {
+  grid-column: 1 / -1; /* Spans from the first to the last column line */
+  z-index: 10; /* Ensure header is above other content */
+}
+
+/* Sidebar positioning */
+#sidebar {
+  grid-column: 1; /* Place sidebar in the first column */
+  grid-row: 2; /* Place sidebar below the header */
+  background-color: #263238; /* Example background color */
+  color: #fff; /* Example text color */
+  overflow-y: auto; /* Enable scrolling for sidebar content */
+  transition: all 0.3s ease-in-out;
+  position: relative; /* For positioning the close icon */
+  z-index: 5; /* Below header, above main content if needed */
+}
+
+/* Responsive sidebar for mobile (off-canvas) */
+@media (max-width: 767px) {
+  #sidebar {
+    position: fixed; /* Overlay on mobile */
+    top: 0;
+    left: -260px; /* Hidden by default */
+    width: 260px;
+    height: 100%;
+    z-index: 20; /* Ensure it's on top when open */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .sidebar-responsive {
+    left: 0; /* Show sidebar when responsive class is active */
+  }
+
+  .close_icon {
+    display: block; /* Show close icon on mobile */
+    cursor: pointer;
+    padding: 10px;
+  }
+}
+
+/* Main content area */
+.main-container {
+  grid-column: 2; /* Place main content in the second column on desktop */
+  grid-row: 2; /* Place main content below the header */
+  overflow-y: auto; /* Enable scrolling for main content */
+  padding: 20px; /* Example padding */
+  background-color: #f0f2f5; /* Example background color */
+}
+
+/* Adjust main content for mobile when sidebar is closed */
+@media (max-width: 767px) {
+  .main-container {
+    grid-column: 1; /* Main content takes full width on mobile */
+    grid-row: 2;
+  }
+}
+
+/* Basic styling for sidebar list items */
+.sidebar-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-list-item {
+  padding: 10px 20px;
+}
+
+.sidebar-list-item a {
+  color: inherit;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sidebar-list-item a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-menu {
+  list-style: none;
+  padding-left: 20px; /* Indent dropdown items */
+}
+
+.dropdown-item {
+  padding: 5px 0;
+}
+
+.icon {
+  /* Basic icon styling */
+  margin-right: 5px;
+}
