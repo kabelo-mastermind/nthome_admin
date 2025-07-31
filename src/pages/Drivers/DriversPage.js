@@ -59,7 +59,7 @@ function DriversPage() {
     const fetchDrivers = async () => {
       try {
         const res = await axios.get(api + "drivers");
-        setDrivers(res.data);
+        setDrivers(res.data.rows);
       } catch (err) {
         setError("Failed to load driver data.");
       } finally {
