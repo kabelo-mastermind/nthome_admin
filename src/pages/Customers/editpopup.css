@@ -1,0 +1,153 @@
+/* editpopup.css */
+
+/* Overlay dark background */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal content container */
+.modal-content {
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 10px;
+  max-width: 450px;
+  width: 90%;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  animation: fadeInScale 0.3s ease forwards;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Modal header */
+.modal-content h2 {
+  margin-bottom: 20px;
+  font-weight: 700;
+  font-size: 1.6rem;
+  color: #222;
+  text-align: center;
+}
+
+/* Form styling */
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.edit-form label {
+  font-weight: 600;
+  color: #333;
+  font-size: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* Input fields */
+.edit-form input[type="text"],
+.edit-form input[type="email"] {
+  padding: 10px 12px;
+  font-size: 1rem;
+  border: 1.8px solid #ccc;
+  border-radius: 6px;
+  transition: border-color 0.3s ease;
+}
+
+.edit-form input[type="text"]:focus,
+.edit-form input[type="email"]:focus {
+  border-color: #3f8efc;
+  outline: none;
+  box-shadow: 0 0 8px rgba(63, 142, 252, 0.3);
+}
+
+/* Error text */
+.error-text {
+  color: #d93025;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: -10px;
+}
+
+/* Buttons container */
+.form-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+/* Buttons common */
+.form-buttons button {
+  padding: 10px 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  min-width: 100px;
+}
+
+/* Save button */
+.form-buttons button[type="submit"] {
+  background-color: #3f8efc;
+  color: white;
+}
+
+.form-buttons button[type="submit"]:hover:not(:disabled) {
+  background-color: #2c6adf;
+}
+
+/* Disabled state */
+.form-buttons button:disabled {
+  background-color: #a0b4f8;
+  cursor: not-allowed;
+}
+
+/* Cancel button */
+.form-buttons button[type="button"] {
+  background-color: #f0f0f0;
+  color: #555;
+}
+
+.form-buttons button[type="button"]:hover:not(:disabled) {
+  background-color: #dcdcdc;
+}
+
+/* Animation */
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 25px 20px;
+    width: 95%;
+  }
+
+  .form-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .form-buttons button {
+    min-width: 100%;
+  }
+}
