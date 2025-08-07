@@ -68,14 +68,14 @@ export default function CustomersPage() {
   });
 
   // Ride history functions (unchanged)
-  const openRideHistory = async (userId) => {
-    setSelectedCustomerId(userId);
+  const openRideHistory = async (id) => {
+    setSelectedCustomerId(id);
     setShowRideHistory(true);
     setTripLoading(true);
     setTripHistory([]);
 
     try {
-      const response = await fetch(`${API_BASE}/tripHistory/${userId}`);
+      const response = await fetch(`${API_BASE}/tripHistory/${id}`);
       if (!response.ok) throw new Error("Failed to fetch trip history");
       const data = await response.json();
       setTripHistory(data);
@@ -94,11 +94,12 @@ export default function CustomersPage() {
   };
 
   // Delete customer (unchanged)
-  const deleteCustomer = async (userId) => {
+  const deleteCustomer = async (id) => {
+   
     if (!window.confirm("Are you sure you want to delete this user?")) return;
 
     try {
-      const response = await fetch(`${API_BASE}/delete-customer/${userId}`, {
+      const response = await fetch(`${API_BASE}/delete-customer/${id}`, {
         method: "DELETE",
       });
       if (!response.ok) {
