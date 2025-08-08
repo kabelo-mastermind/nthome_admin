@@ -6,8 +6,7 @@ import {
   FaArrowLeft,
 } from "react-icons/fa";
 import "./CustomerPage.css";
-import './editpopup.css';
-
+import "./editpopup.css";
 
 const API_BASE = "https://tech-wise-server-brown.vercel.app/api";
 
@@ -16,13 +15,10 @@ export default function CustomersPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
   const [showRideHistory, setShowRideHistory] = useState(false);
   const [selectedCustomerId, setSelectedCustomerId] = useState(null);
   const [tripHistory, setTripHistory] = useState([]);
   const [tripLoading, setTripLoading] = useState(false);
-
-  // New state for edit modal & form
   const [showEditModal, setShowEditModal] = useState(false);
   const [editFormData, setEditFormData] = useState({
     id: null,
@@ -35,7 +31,6 @@ export default function CustomersPage() {
   const [editLoading, setEditLoading] = useState(false);
   const [editError, setEditError] = useState(null);
 
-  // Fetch customers
   const fetchCustomers = async () => {
     setLoading(true);
     setError(null);
@@ -67,13 +62,11 @@ export default function CustomersPage() {
     );
   });
 
-  // Ride history functions (unchanged)
   const openRideHistory = async (id) => {
     setSelectedCustomerId(id);
     setShowRideHistory(true);
     setTripLoading(true);
     setTripHistory([]);
-
     try {
       const response = await fetch(`${API_BASE}/tripHistory/${id}`);
       if (!response.ok) throw new Error("Failed to fetch trip history");
@@ -93,11 +86,8 @@ export default function CustomersPage() {
     setTripHistory([]);
   };
 
-  // Delete customer (unchanged)
   const deleteCustomer = async (id) => {
-   
     if (!window.confirm("Are you sure you want to delete this user?")) return;
-
     try {
       const response = await fetch(`${API_BASE}/delete-customer/${id}`, {
         method: "DELETE",
@@ -115,7 +105,6 @@ export default function CustomersPage() {
     }
   };
 
-  // Open edit modal & populate form
   const editCustomer = (customer) => {
     setEditFormData({
       id: customer.id,
@@ -129,45 +118,26 @@ export default function CustomersPage() {
     setShowEditModal(true);
   };
 
-  // Handle input changes in edit form
   const handleEditInputChange = (e) => {
     const { name, value } = e.target;
-    setEditFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setEditFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Submit edited customer data
   const submitEditForm = async (e) => {
     e.preventDefault();
-
     const { id, name, lastname, email, phoneNumber, current_address } = editFormData;
-
     if (!name || !lastname || !email) {
       setEditError("Name, Lastname, and Email are required.");
       return;
     }
-
     setEditLoading(true);
     setEditError(null);
-
     try {
       const response = await fetch(`${API_BASE}/update-customer`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user_id: id,
-          name,
-          lastname,
-          email,
-          phoneNumber,
-          current_address,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: id, name, lastname, email, phoneNumber, current_address }),
       });
-
       if (!response.ok) {
         const resData = await response.json();
         setEditError(resData.message || "Failed to update customer");
@@ -187,90 +157,58 @@ export default function CustomersPage() {
   return (
     <div className="customer-page-container">
       <h1>Customer Management</h1>
-
       <input
         type="search"
         placeholder="Search customers..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="search-input"
+        className="customer-search-input"
       />
 
       {loading ? (
         <p>Loading customers...</p>
       ) : error ? (
-        <p className="error-text">Error: {error}</p>
+        <p className="customer-error-text">Error: {error}</p>
       ) : filteredCustomers.length === 0 ? (
         <p>No customers found.</p>
       ) : (
-        <div className="table-wrapper">
-          <table className="customers-table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Lastname</th>
-                <th>Email</th>
-                <th>Contact No</th>
-                <th>Address</th>
-                <th>Other Actions</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredCustomers.map((c, idx) => (
-                <tr key={c.id || idx}>
-                  <td>{idx + 1}</td>
-                  <td>{c.name}</td>
-                  <td>{c.lastname || "-"}</td>
-                  <td>{c.email}</td>
-                  <td>{c.phoneNumber || "-"}</td>
-                  <td>{c.current_address || "-"}</td>
-                  <td>
-                    <button
-                      className="icon-btn"
-                      onClick={() => openRideHistory(c.id)}
-                      title="View Ride History"
-                    >
-                      <FaHistory />
-                    </button>
-                  </td>
-                  <td>
-                    <button
-                      className="icon-btn edit-btn"
-                      onClick={() => editCustomer(c)}
-                      title="Edit Customer"
-                    >
-                      <FaEdit />
-                    </button>
-                    <button
-                      className="icon-btn delete-btn"
-                      onClick={() => deleteCustomer(c.id)}
-                      title="Delete Customer"
-                    >
-                      <FaTrash />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="customer-card-list">
+          {filteredCustomers.map((c, idx) => (
+            <div className="customer-card" key={c.id || idx}>
+              <div className="customer-info">
+                <div className="customer-card-header">
+                  <h3>{c.name} {c.lastname}</h3>
+                </div>
+                <div className="customer-card-body">
+                  <p><strong>Email:</strong> {c.email}</p>
+                  <p><strong>Phone:</strong> {c.phoneNumber || "-"}</p>
+                  <p><strong>Address:</strong> {c.current_address || "-"}</p>
+                </div>
+              </div>
+              <div className="customer-card-actions">
+                <button className="customer-card-icons icon-history" onClick={() => openRideHistory(c.id)} title="View Ride History">
+                  <FaHistory />
+                </button>
+                <button className="customer-card-icons icon-edit" onClick={() => editCustomer(c)} title="Edit Customer">
+                  <FaEdit />
+                </button>
+                <button className="customer-card-icons icon-delete" onClick={() => deleteCustomer(c.id)} title="Delete Customer">
+                  <FaTrash />
+                </button>
+              </div>
+
+            </div>
+          ))}
         </div>
       )}
 
-      {/* Ride History Modal */}
       {showRideHistory && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <button
-              className="close-btn"
-              onClick={closeRideHistory}
-              title="Close Ride History"
-            >
+            <button className="close-btn" onClick={closeRideHistory}>
               <FaArrowLeft /> Back
             </button>
             <h2>Ride History for Customer ID: {selectedCustomerId}</h2>
-
             {tripLoading ? (
               <p>Loading trip history...</p>
             ) : tripHistory.length === 0 ? (
@@ -305,74 +243,20 @@ export default function CustomersPage() {
         </div>
       )}
 
-      {/* Edit Customer Modal */}
       {showEditModal && (
         <div className="modal-overlay">
           <div className="modal-content">
             <h2>Edit Customer</h2>
             <form onSubmit={submitEditForm} className="edit-form">
-              <label>
-                First Name:
-                <input
-                  type="text"
-                  name="name"
-                  value={editFormData.name}
-                  onChange={handleEditInputChange}
-                  required
-                />
-              </label>
-              <label>
-                Last Name:
-                <input
-                  type="text"
-                  name="lastname"
-                  value={editFormData.lastname}
-                  onChange={handleEditInputChange}
-                  required
-                />
-              </label>
-              <label>
-                Email:
-                <input
-                  type="email"
-                  name="email"
-                  value={editFormData.email}
-                  onChange={handleEditInputChange}
-                  required
-                />
-              </label>
-              <label>
-                Phone Number:
-                <input
-                  type="text"
-                  name="phoneNumber"
-                  value={editFormData.phoneNumber}
-                  onChange={handleEditInputChange}
-                />
-              </label>
-              <label>
-                Address:
-                <input
-                  type="text"
-                  name="current_address"
-                  value={editFormData.current_address}
-                  onChange={handleEditInputChange}
-                />
-              </label>
-
+              <label>First Name:<input type="text" name="name" value={editFormData.name} onChange={handleEditInputChange} required /></label>
+              <label>Last Name:<input type="text" name="lastname" value={editFormData.lastname} onChange={handleEditInputChange} required /></label>
+              <label>Email:<input type="email" name="email" value={editFormData.email} onChange={handleEditInputChange} required /></label>
+              <label>Phone Number:<input type="text" name="phoneNumber" value={editFormData.phoneNumber} onChange={handleEditInputChange} /></label>
+              <label>Address:<input type="text" name="current_address" value={editFormData.current_address} onChange={handleEditInputChange} /></label>
               {editError && <p className="error-text">{editError}</p>}
-
               <div className="form-buttons">
-                <button type="submit" disabled={editLoading}>
-                  {editLoading ? "Saving..." : "Save"}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowEditModal(false)}
-                  disabled={editLoading}
-                >
-                  Cancel
-                </button>
+                <button type="submit" disabled={editLoading}>{editLoading ? "Saving..." : "Save"}</button>
+                <button type="button" onClick={() => setShowEditModal(false)} disabled={editLoading}>Cancel</button>
               </div>
             </form>
           </div>
