@@ -4,6 +4,9 @@ import {
   FaEdit,
   FaTrash,
   FaArrowLeft,
+  FaEnvelope,
+  FaPhoneAlt,
+  FaAddressBook
 } from "react-icons/fa";
 import "./CustomerPage.css";
 import "./editpopup.css";
@@ -176,13 +179,23 @@ export default function CustomersPage() {
           {filteredCustomers.map((c, idx) => (
             <div className="customer-card" key={c.id || idx}>
               <div className="customer-info">
+                 
                 <div className="customer-card-header">
-                  <h3>{c.name} {c.lastname}</h3>
+                  <div className="customer-profile-picture">
+                    <img
+                      src={c.profile_picture || "/images/placeholder.jpg"}
+                      alt={c.name}
+                      className="driver-avatar"
+                    />
+                  </div>
+                 <div className="customer-initials">
+                  <p>{c.name} {c.lastname}</p>
+                 </div>
                 </div>
                 <div className="customer-card-body">
-                  <p><strong>Email:</strong> {c.email}</p>
-                  <p><strong>Phone:</strong> {c.phoneNumber || "-"}</p>
-                  <p><strong>Address:</strong> {c.current_address || "-"}</p>
+                  <p><FaEnvelope/> {c.email}</p>
+                  <p className="customer-contacts"><FaPhoneAlt/> {c.phoneNumber || "-"}</p>
+                  <p className="customer-address"><FaAddressBook className="customer-address-icon"/>{c.current_address || "-"}</p>
                 </div>
               </div>
               <div className="customer-card-actions">

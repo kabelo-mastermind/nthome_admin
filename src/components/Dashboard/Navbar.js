@@ -93,7 +93,7 @@ const Navbar = ({ toggleSidebar }) => {
                   <option value="drivers">Drivers</option>
                   <option value="customers">Customers</option>
                   <option value="rides">Rides</option>
-                  <option value="vehicles">Vehiclesjjj</option>
+                  <option value="vehicles">Vehicles</option>
                 </select>
               </div>
             </form>
