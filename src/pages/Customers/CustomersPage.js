@@ -6,7 +6,8 @@ import {
   FaArrowLeft,
   FaEnvelope,
   FaPhoneAlt,
-  FaAddressBook
+  FaAddressBook,
+  FaDownload
 } from "react-icons/fa";
 import "./CustomerPage.css";
 import "./editpopup.css";

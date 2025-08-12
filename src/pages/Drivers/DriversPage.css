@@ -1,355 +1,152 @@
-.driver-table-container {
-  padding: 32px;
-  background: #fff;
-  min-height: 100vh;
-  font-family: 'Segoe UI', Arial, sans-serif;
+.drivers-page {
+  padding: 20px;
 }
 
-.driver-table-title {
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 0.25rem;
-  color: #111827;
-}
-
-.driver-table-subtitle {
-  color: #6b7280;
-  margin-bottom: 1.5rem;
-}
-
-.driver-table {
+.driver-search {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  background: #fff;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: none;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
 }
 
-.driver-table th,
-.driver-table td {
+.driver-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.driver-card {
+  background: #fff;
   padding: 16px;
-  text-align: left;
-  vertical-align: middle;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.driver-table th {
-  color: #374151;
-  font-weight: 600;
-  background: #fff;
-  border-bottom: 2px solid #f3f4f6;
-  font-size: 1rem;
+.driver-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.driver-table tr {
-  border-bottom: 1px solid #f3f4f6;
-}
-
-.driver-table tr:last-child {
-  border-bottom: none;
-}
-
-.driver-info {
+.driver-card-info {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
-.driver-avatar {
-  width: 32px;
-  height: 32px;
+.driver-card-avatar {
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  object-fit: cover;
-  border: 1px solid #e5e7eb;
-  background: #f3f4f6;
 }
 
-.driver-name {
-  font-weight: 600;
-  color: #111827;
-  display: block;
-}
-
-.driver-customer-id {
-  font-size: 0.85rem;
-  color: #9ca3af;
-  margin-top: 2px;
-}
-
-.driver-contact-email {
-  color: #111827;
-  font-size: 1rem;
-  font-weight: normal;
-  display: block;
-}
-
-.driver-contact-phone {
-  color: #9ca3af;
-  font-size: 0.95rem;
-  margin-top: 2px;
+.driver-card-name {
+  margin: 0;
 }
 
 .status-badge {
-  display: inline-block;
-  padding: 2px 16px;
-  border-radius: 999px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  vertical-align: middle;
-  margin-bottom: 2px;
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: bold;
 }
 
-.status-active {
-  background: #111827;
-  color: #fff;
+.status-approved {
+  background-color: #e6f8e6;
+  color: #2e7d32;
+  
 }
 
 .status-pending {
-  background: #f3f4f6;
-  color: #111827;
-  border: 1px solid #e5e7eb;
+  background-color: #fff3e0;
+  color: #ef6c00;
+  
 }
 
-.status-sub {
-  font-size: 0.85rem;
-  color: #9ca3af;
-  display: block;
-  margin-top: 2px;
-}
-
-.documents-list {
+.driver-card-actions {
   display: flex;
-  gap: 16px;
-  align-items: center;
-}
-
-.document-btn {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  background: none;
-  border: none;
-  color: #374151;
-  font-size: 0.95rem;
-  cursor: pointer;
-  padding: 0;
-}
-
-.document-btn:hover {
-  color: #2563eb;
-}
-
-.document-icon {
-  font-size: 1.1rem;
-  display: inline-block;
-  vertical-align: middle;
-}
-
-.upload-date {
-  color: #374151;
-  font-size: 1rem;
-}
-
-.actions-list {
-  display: flex;
-  gap: 16px;
-  align-items: center;
+  gap: 8px;
 }
 
 .action-btn {
   background: none;
   border: none;
   cursor: pointer;
-  color: #6b7280;
-  padding: 4px;
-  font-size: 1.1rem;
-  transition: color 0.2s;
+  
 }
 
-.action-btn:hover {
-  color: #111827;
+.action-btn.delete {
+  color: red;
 }
-
-.action-btn.delete:hover {
-  color: #dc2626;
-}
-
-/* Modal Styles */
+/* Modal overlay (semi-transparent background) */
 .modal-overlay {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.25);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999;
+  z-index: 9999;
 }
-.modal-content {
-  background: #fff;
-  border-radius: 12px;
-  padding: 32px 24px 24px 24px;
-  min-width: 340px;
-  max-width: 95vw;
-  box-shadow: 0 2px 32px rgba(0,0,0,0.12);
-  position: relative;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-.modal-close {
-  position: absolute;
-  top: 12px;
-  right: 20px;
-  background: none;
-  border: none;
-  font-size: 2rem;
-  color: #6b7280;
-  cursor: pointer;
-}
-.modal-title {
-  font-size: 1.3rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
-}
-.modal-details {
-  display: flex;
-  gap: 24px;
-  align-items: flex-start;
-  z-index: 999;
-}
-.modal-avatar {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 1px solid #e5e7eb;
-  background: #f3f4f6;
-  margin-right: 12px;
-}
-.modal-details > div {
-  font-size: 1rem;
-  color: #374151;
-}
-.modal-details strong {
-  color: #111827;
-  font-weight: 600;
-}
-.modal-details a {
-  color: #2563eb;
-  text-decoration: underline;
-}
-/* Tabs in Modal */
-.modal-tabs {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 1.5rem;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.modal-tabs button {
-  background: none;
-  border: none;
-  font-size: 1rem;
-  padding: 8px 12px;
-  cursor: pointer;
-  color: #6b7280;
-  font-weight: 500;
-  border-bottom: 3px solid transparent;
-  transition: all 0.2s ease;
-}
-
-.modal-tabs button:hover {
-  color: #111827;
-}
-
-.modal-tabs .tab-active {
-  color: #111827;
-  font-weight: 600;
-  border-color: #2563eb;
-}
-
-/* Car Details */
-.car-card {
-  background: #f9fafb;
-  padding: 16px;
-  margin-bottom: 1rem;
+.document-btn{
+  
   border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  border: none;
+  padding :8px;
+  
+  
+}
+/* Modal box */
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 320px;
+  max-width: 90%;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
 }
 
-.car-card p {
-  margin: 0;
-  color: #374151;
-  font-size: 0.95rem;
+/* Document list styling */
+.doc-list {
+  list-style: none;
+  padding: 0;
+  margin: 1em 0;
 }
 
-.car-card strong {
-  color: #111827;
-}
-
-.car-image {
-  width: 100%;
-  max-width: 220px;
-  border-radius: 6px;
-  border: 1px solid #e5e7eb;
-  object-fit: cover;
+.doc-list li {
   margin-bottom: 12px;
 }
-.driver-table-scroll {
-  width: 100%;
-  overflow-x: auto;
-  /* Optional: Add bottom padding for scrollbar space */
-  padding-bottom: 8px;
-}
 
-/* Make the table at least as wide as needed for all columns */
-.driver-table {
-  min-width: 900px; /* Adjust as needed for your columns */
-  width: 100%;
-}
-
-.modal-tabs {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-.modal-tabs button {
-  padding: 8px 16px;
+.doc-list button {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  padding: 8px 14px;
   border-radius: 6px;
-  border: none;
-  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s;
+  font-size: 0.9rem;
+  width: 100%;
 }
 
-.modal-tabs .tab-active {
-  background-color: #2563eb;
-  color: white;
+.doc-list button:hover {
+  background-color: #0056b3;
 }
 
-.modal-tabs .tab-inactive {
-  background-color: #f3f4f6;
-  color: #6b7280;
-}
-
-.modal-tabs .tab-inactive:hover {
-  background-color: #dbeafe;
-  color: #2563eb;
-}
-.download-btn {
-  background-color: #4caf50;
-  color: white;
-  padding: 8px 16px;
-  margin-bottom: 1rem;
+.modal-close-btn {
+  background-color: #888;
   border: none;
-  border-radius: 4px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  color: white;
   cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
 }
 
-.download-btn:hover {
-  background-color: #45a049;
+.modal-close-btn:hover {
+  background-color: #555;
 }
