@@ -139,72 +139,72 @@ function VehiclesPage() {
               </div>
 
               <div className="vehicle-card-section">
-  {editingId === v.id ? (
-    <div className="vehicle-card-edit">
-      <label>
-        Seats
-        <input
-          type="number"
-          name="number_of_seats"
-          value={editData.number_of_seats}
-          onChange={handleChange}
-        />
-      </label>
-      <label>
-        Colour
-        <input
-          type="text"
-          name="car_colour"
-          value={editData.car_colour}
-          onChange={handleChange}
-        />
-      </label>
-      <label>
-        License Plate
-        <input
-          type="text"
-          name="license_plate"
-          value={editData.license_plate}
-          onChange={handleChange}
-        />
-      </label>
-      <label>
-        Car Image URL
-        <input
-          type="text"
-          name="car_image"
-          value={editData.car_image}
-          onChange={handleChange}
-        />
-      </label>
-      <label>
-        Class
-        <input
-          type="number"
-          name="class"
-          value={editData.class}
-          onChange={handleChange}
-        />
-      </label>
+                {editingId === v.id ? (
+                  <div className="vehicle-card-edit">
+                    <label>
+                      Seats
+                      <input
+                        type="number"
+                        name="number_of_seats"
+                        value={editData.number_of_seats}
+                        onChange={handleChange}
+                      />
+                    </label>
+                    <label>
+                      Colour
+                      <input
+                        type="text"
+                        name="car_colour"
+                        value={editData.car_colour}
+                        onChange={handleChange}
+                      />
+                    </label>
+                    <label>
+                      License Plate
+                      <input
+                        type="text"
+                        name="license_plate"
+                        value={editData.license_plate}
+                        onChange={handleChange}
+                      />
+                    </label>
+                    <label>
+                      Car Image URL
+                      <input
+                        type="text"
+                        name="car_image"
+                        value={editData.car_image}
+                        onChange={handleChange}
+                      />
+                    </label>
+                    <label>
+                      Class
+                      <input
+                        type="number"
+                        name="class"
+                        value={editData.class}
+                        onChange={handleChange}
+                      />
+                    </label>
 
-      <div className="edit-buttons">
-        <button className="save-btn" onClick={() => saveEdit(v.id)}>
-          Save
-        </button>
-        <button className="cancel-btn" onClick={cancelEdit}>
-          Cancel
-        </button>
-      </div>
-    </div>
-  ) : (
-    <>
-      <p><strong>Seats:</strong> {v.number_of_seats}</p>
-      <p><strong>Colour:</strong> {v.car_colour}</p>
-      <p><strong>License Plate:</strong> {v.license_plate}</p>
-      <p><strong>Class:</strong> {v.class}</p>
-    </>
-  )}
-</div>
+                    <div className="edit-buttons">
+                      <button className="save-btn" onClick={() => saveEdit(v.id)}>
+                        Save
+                      </button>
+                      <button className="cancel-btn" onClick={cancelEdit}>
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <p><strong>Seats:</strong> {v.number_of_seats}</p>
+                    <p><strong>Colour:</strong> {v.car_colour}</p>
+                    <p><strong>License Plate:</strong> {v.license_plate}</p>
+                    <p><strong>Class:</strong> {v.class}</p>
+                  </>
+                )}
+              </div>
 
             </div>
           ))

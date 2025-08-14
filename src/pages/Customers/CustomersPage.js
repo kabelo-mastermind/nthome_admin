@@ -186,11 +186,11 @@ export default function CustomersPage() {
                     <img
                       src={c.profile_picture || "/images/placeholder.jpg"}
                       alt={c.name}
-                      className="driver-avatar"
+                      className="customer-avatar"
                     />
                   </div>
                  <div className="customer-initials">
-                  <p>{c.name} {c.lastname}</p>
+                  <h2>{c.name} {c.lastname}</h2>
                  </div>
                 </div>
                 <div className="customer-card-body">
