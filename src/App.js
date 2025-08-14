@@ -7,6 +7,7 @@ import DriversPage from "./pages/Drivers/DriversPage"
 import CustomersPage from "./pages/Customers/CustomersPage"
 import LandingPage from "./pages/LandingPage/LandingPage"
 import EditDriverForm from "./pages/EditDriver/EditDriverForm"
+import VehiclesPage  from "./pages/Vehicles/VehicleType"
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
                     <Route path="driver" element={<DriversPage />} />
                     <Route path="edit-driver/:userId" element={<EditDriverForm />} /> {/* ✅ FIXED HERE */}
                     <Route path="customerRide" element={<CustomersPage />} />
+                    <Route path="vehicle" element={<VehiclesPage />} />
                   </Routes>
                 </AdminApp>
               }

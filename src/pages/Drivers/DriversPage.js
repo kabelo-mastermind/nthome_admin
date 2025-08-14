@@ -149,7 +149,7 @@ function DriversPage() {
               {/* Documents Button */}
               <div className="driver-card-section">
                 <button className="document-btn" onClick={() => openDocModal(d)}>
-                  <FaDownload />Documents
+                  <FaDownload />View Documents
                 </button>
               </div>
 

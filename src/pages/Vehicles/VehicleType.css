@@ -1,0 +1,142 @@
+.vehicles-page {
+  padding: 20px;
+}
+
+.vehicle-search {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.vehicle-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.vehicle-card {
+  background: #fff;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.vehicle-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.vehicle-card-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.vehicle-card-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.vehicle-card-name {
+  margin: 0;
+}
+
+.vehicle-card-year {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.vehicle-card-section {
+  margin-top: 10px;
+}
+
+.vehicle-card-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.action-btn.delete {
+  color: red;
+}
+
+.no-vehicles {
+  color: #888;
+  text-align: center;
+}
+.vehicle-card-edit {
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  padding: 12px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.vehicle-card-edit label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.vehicle-card-edit input {
+  padding: 8px;
+  margin-top: 4px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 0.9rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.vehicle-card-edit input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+  outline: none;
+}
+
+.edit-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.save-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.save-btn:hover {
+  background-color: #218838;
+}
+
+.cancel-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.cancel-btn:hover {
+  background-color: #c82333;
+}
