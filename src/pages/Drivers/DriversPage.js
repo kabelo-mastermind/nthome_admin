@@ -117,11 +117,7 @@ function DriversPage() {
                     <p className="driver-card-customer">{d.customer_code}</p>
                   </div>
                 </div>
-                <div className="driver-card-actions">
-                  <button className="action-btn" onClick={() => alert("View")}><EyeIcon /></button>
-                  <button className="action-btn" onClick={() => handleEditDriver(d.users_id)}><EditIcon /></button>
-                  <button className="action-btn delete" onClick={() => handleDeleteDriver(d.users_id)}><TrashIcon /></button>
-                </div>
+                
               </div>
 
               {/* Contact */}
@@ -152,7 +148,12 @@ function DriversPage() {
                   <FaDownload />View Documents
                 </button>
               </div>
-
+              {/*actiongs */}
+               <div className="driver-card-actions">
+                  <button className="action-btn" onClick={() => alert("View")}><EyeIcon /></button>
+                  <button className="action-btn" onClick={() => handleEditDriver(d.users_id)}><EditIcon /></button>
+                  <button className="action-btn delete" onClick={() => handleDeleteDriver(d.users_id)}><TrashIcon /></button>
+                </div>
             </div>
           ))
         ) : (

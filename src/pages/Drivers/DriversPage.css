@@ -1,41 +1,51 @@
+/* === PAGE LAYOUT === */
 .drivers-page {
   padding: 20px;
   font-family: Arial, sans-serif;
 }
 
+/* Search */
 .driver-search {
   width: 100%;
   padding: 10px;
   margin-bottom: 20px;
-  border-radius: 8px;
+  border-radius: 6px;
   border: 1px solid #ccc;
   font-size: 1rem;
 }
 
+/* === TABLE LAYOUT === */
 .driver-card-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
+/* Table rows */
 .driver-card {
-  background: #fff;
-  padding: 16px;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  transition: box-shadow 0.2s ease;
+  display: table-row;
+  border-bottom: 1px solid #e5e5e5;
+  transition: background 0.2s ease;
 }
 
 .driver-card:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  background: #f9f9f9;
 }
 
-.driver-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* Table cells */
+.driver-card-header,
+.driver-card-section {
+  display: table-cell;
+  vertical-align: middle;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
+/* First cell with avatar + name */
 .driver-card-info {
   display: flex;
   align-items: center;
@@ -43,8 +53,8 @@
 }
 
 .driver-card-avatar {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -52,21 +62,15 @@
 .driver-card-name {
   margin: 0;
   font-weight: 600;
+  font-size: 1rem;
 }
 
 .driver-card-customer {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: #666;
 }
 
-.driver-card-section {
-  margin-top: 10px;
-}
-
-.driver-card-section p {
-  margin: 4px 0;
-}
-
+/* Status badge */
 .status-badge {
   padding: 4px 10px;
   border-radius: 10px;
@@ -84,8 +88,10 @@
   color: #ef6c00;
 }
 
+/* Actions cell */
 .driver-card-actions {
   display: flex;
+  justify-content: flex-end;
   gap: 8px;
 }
 
@@ -95,11 +101,12 @@
   cursor: pointer;
   padding: 6px;
   border-radius: 6px;
-  transition: transform 0.2s;
+  transition: transform 0.2s, background 0.2s;
 }
 
 .action-btn:hover {
   transform: scale(1.1);
+  background: #f0f0f0;
 }
 
 .action-btn.delete {
@@ -111,8 +118,8 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 12px;
-  border-radius: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
   border: none;
   background-color: #007bff;
   color: white;
@@ -125,7 +132,7 @@
   background-color: #0056b3;
 }
 
-/* Modal overlay */
+/* Modal remains same */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -141,7 +148,6 @@
   overflow-y: auto;
 }
 
-/* Modal content */
 .modal-content {
   background: white;
   padding: 20px;
@@ -151,7 +157,6 @@
   box-shadow: 0 2px 10px rgba(0,0,0,0.3);
 }
 
-/* Document list inside modal */
 .doc-list {
   list-style: none;
   padding: 0;

@@ -11,6 +11,17 @@ import {
 } from "react-icons/fa";
 import "./CustomerPage.css";
 import "./editpopup.css";
+const EditIcon = () => (
+  <svg className="icon" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+    <path d="M15.232 5.232l3.536 3.536M9 13l6-6M3 21h18" />
+  </svg>
+);
+const TrashIcon = () => (
+  <svg className="icon" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+    <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4a2 2 0 012 2v2H7V5a2 2 0 012-2z" />
+  </svg>
+);
+
 
 const API_BASE = "https://tech-wise-server-brown.vercel.app/api";
 
@@ -179,37 +190,47 @@ export default function CustomersPage() {
         <div className="customer-card-list">
           {filteredCustomers.map((c, idx) => (
             <div className="customer-card" key={c.id || idx}>
-              <div className="customer-info">
-                 
-                <div className="customer-card-header">
-                  <div className="customer-profile-picture">
-                    <img
-                      src={c.profile_picture || "/images/placeholder.jpg"}
-                      alt={c.name}
-                      className="customer-avatar"
-                    />
+              <div className="customer-card-list">
+                {filteredCustomers.map((c) => (
+                  <div className="customer-card" key={c.id}>
+                    {/* Avatar + Name */}
+                    <div className="customer-card-header">
+                      <img src={c.profile_picture || "/images/placeholder.jpg"} alt={c.name} className="customer-avatar" />
+                      <div>
+                        <h2>{c.name} {c.lastname}</h2>
+                        <p>{c.email}</p>
+                      </div>
+                    </div>
+
+                    {/* Contact Info */}
+                    <div className="customer-card-body">
+                      <p><FaPhoneAlt /> {c.phoneNumber || "-"}</p>
+                      <p><FaAddressBook /> {c.current_address || "-"}</p>
+                      {/* Optional status badge */}
+                      <p>
+                        <strong>Status:</strong>{" "}
+                        <span
+                          className={`status-badge ${c.status?.toLowerCase() === "active" ? "status-active" : "status-inactive"
+                            }`}
+                        >
+                          {c.status ? c.status.charAt(0).toUpperCase() + c.status.slice(1) : "Inactive"}
+                        </span>
+                      </p>
+
+
+
+                    </div>
+
+                    {/* Actions */}
+                    <div className="customer-card-actions">
+                      <button className="customer-card-icons" onClick={() => openRideHistory(c.id)} title="Ride History"><FaHistory /></button>
+                      <button className="customer-card-icons" onClick={() => editCustomer(c)} title="Edit"><EditIcon /></button>
+                      <button className="customer-card-icons icon-delete" onClick={() => deleteCustomer(c.id)} title="Delete"><TrashIcon /></button>
+                    </div>
                   </div>
-                 <div className="customer-initials">
-                  <h2>{c.name} {c.lastname}</h2>
-                 </div>
-                </div>
-                <div className="customer-card-body">
-                  <p><FaEnvelope/> {c.email}</p>
-                  <p className="customer-contacts"><FaPhoneAlt/> {c.phoneNumber || "-"}</p>
-                  <p className="customer-address"><FaAddressBook className="customer-address-icon"/>{c.current_address || "-"}</p>
-                </div>
+                ))}
               </div>
-              <div className="customer-card-actions">
-                <button className="customer-card-icons icon-history" onClick={() => openRideHistory(c.id)} title="View Ride History">
-                  <FaHistory />
-                </button>
-                <button className="customer-card-icons icon-edit" onClick={() => editCustomer(c)} title="Edit Customer">
-                  <FaEdit />
-                </button>
-                <button className="customer-card-icons icon-delete" onClick={() => deleteCustomer(c.id)} title="Delete Customer">
-                  <FaTrash />
-                </button>
-              </div>
+
 
             </div>
           ))}

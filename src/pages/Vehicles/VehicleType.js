@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "./VehicleType.css";
 import { api } from "../../api";
+import { FaDownload } from "react-icons/fa";
 
 // Icons
 const EditIcon = () => (
@@ -21,13 +22,11 @@ function VehiclesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [editingId, setEditingId] = useState(null); // track which vehicle is being edited
-  const [editData, setEditData] = useState({});
 
   useEffect(() => {
     const fetchVehicles = async () => {
       try {
-        const res = await axios.get(`${api}all_car_listing`);
+        const res = await axios.get(`${api}get-all-vehicles`);
         setVehicles(res.data.rows);
       } catch (err) {
         setError("Failed to load vehicles.");
@@ -39,66 +38,23 @@ function VehiclesPage() {
   }, []);
 
   const filteredVehicles = vehicles.filter((v) =>
-    `${v.car_make} ${v.car_model}`.toLowerCase().includes(searchTerm.toLowerCase())
+    v.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Start editing a vehicle
-  const startEdit = (v) => {
-    setEditingId(v.id);
-    setEditData({
-      number_of_seats: v.number_of_seats,
-      car_colour: v.car_colour,
-      license_plate: v.license_plate,
-      car_image: v.car_image,
-      class: v.class
-    });
-  };
-
-  // Cancel editing
-  const cancelEdit = () => {
-    setEditingId(null);
-    setEditData({});
-  };
-
-  // Update input values
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setEditData(prev => ({ ...prev, [name]: value }));
-  };
-
-  // Save edit
-  const saveEdit = async (id) => {
-    try {
-      await axios.put(`${api}car_listing/${id}`, editData);
-      setVehicles(prev => prev.map(v => v.id === id ? { ...v, ...editData } : v));
-      cancelEdit();
-      alert("Vehicle updated successfully!");
-    } catch (err) {
-      console.error(err);
-      alert("Failed to update vehicle.");
+  const handleDeleteVehicle = (id) => {
+    if (window.confirm("Are you sure you want to delete this vehicle?")) {
+      alert(`Delete vehicle with ID: ${id}`);
     }
   };
 
-  // Delete vehicle
-  const handleDeleteVehicle = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this vehicle?")) return;
-
-    try {
-      await axios.delete(`${api}car_listing/${id}`);
-      setVehicles(prev => prev.filter(v => v.id !== id));
-      alert("Vehicle deleted successfully!");
-    } catch (err) {
-      console.error(err);
-      alert("Failed to delete vehicle.");
-    }
-  };
-
-  if (loading) return <p>Loading vehicles...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) return <p className="p-6 text-gray-500">Loading vehicles...</p>;
+  if (error) return <p className="p-6 text-red-500">{error}</p>;
 
   return (
     <div className="vehicles-page">
       <h1>Vehicles</h1>
+
+      {/* Search Bar */}
       <input
         type="text"
         placeholder="Search vehicles..."
@@ -111,101 +67,37 @@ function VehiclesPage() {
         {filteredVehicles.length > 0 ? (
           filteredVehicles.map((v) => (
             <div className="vehicle-card" key={v.id}>
+              {/* Header */}
               <div className="vehicle-card-header">
                 <div className="vehicle-card-info">
                   <img
-                    src={v.car_image || "/images/placeholder.jpg"}
-                    alt={`${v.car_make} ${v.car_model}`}
+                    src={v.image || "/images/placeholder.jpg"}
+                    alt={v.name}
                     className="vehicle-card-avatar"
                   />
                   <div>
-                    <h2 className="vehicle-card-name">{v.car_make} {v.car_model}</h2>
-                    <p className="vehicle-card-year">{v.car_year}</p>
+                    <h2 className="vehicle-card-name">{v.name}</h2>
+                    <p className="vehicle-card-customer">{v.description}</p>
                   </div>
-                </div>
-                <div className="vehicle-card-actions">
-                  {editingId === v.id ? (
-                    <>
-                      <button className="save-btn" onClick={() => saveEdit(v.id)}>Save</button>
-                      <button className="cancel-btn" onClick={cancelEdit}>Cancel</button>
-                    </>
-                  ) : (
-                    <>
-                      <button className="action-btn" onClick={() => startEdit(v)}><EditIcon /></button>
-                      <button className="action-btn delete" onClick={() => handleDeleteVehicle(v.id)}><TrashIcon /></button>
-                    </>
-                  )}
                 </div>
               </div>
 
+              {/* Vehicle Details */}
               <div className="vehicle-card-section">
-                {editingId === v.id ? (
-                  <div className="vehicle-card-edit">
-                    <label>
-                      Seats
-                      <input
-                        type="number"
-                        name="number_of_seats"
-                        value={editData.number_of_seats}
-                        onChange={handleChange}
-                      />
-                    </label>
-                    <label>
-                      Colour
-                      <input
-                        type="text"
-                        name="car_colour"
-                        value={editData.car_colour}
-                        onChange={handleChange}
-                      />
-                    </label>
-                    <label>
-                      License Plate
-                      <input
-                        type="text"
-                        name="license_plate"
-                        value={editData.license_plate}
-                        onChange={handleChange}
-                      />
-                    </label>
-                    <label>
-                      Car Image URL
-                      <input
-                        type="text"
-                        name="car_image"
-                        value={editData.car_image}
-                        onChange={handleChange}
-                      />
-                    </label>
-                    <label>
-                      Class
-                      <input
-                        type="number"
-                        name="class"
-                        value={editData.class}
-                        onChange={handleChange}
-                      />
-                    </label>
-
-                    <div className="edit-buttons">
-                      <button className="save-btn" onClick={() => saveEdit(v.id)}>
-                        Save
-                      </button>
-                      <button className="cancel-btn" onClick={cancelEdit}>
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    <p><strong>Seats:</strong> {v.number_of_seats}</p>
-                    <p><strong>Colour:</strong> {v.car_colour}</p>
-                    <p><strong>License Plate:</strong> {v.license_plate}</p>
-                    <p><strong>Class:</strong> {v.class}</p>
-                  </>
-                )}
+                <p><strong>Cost/Km:</strong> R {v.costPerKm}</p>
+                <p>
+                  <strong>Status:</strong>
+                  <span className={`status-badge ${v.status?.toLowerCase() === "active" ? "status-approved" : "status-pending"}`}>
+                    {v.status || "Active"}
+                  </span>
+                </p>
               </div>
 
+              {/* Actions */}
+              <div className="vehicle-card-actions">
+                <button className="action-btn"><EditIcon /></button>
+                <button className="action-btn delete" onClick={() => handleDeleteVehicle(v.id)}><TrashIcon /></button>
+              </div>
             </div>
           ))
         ) : (
