@@ -1,11 +1,20 @@
 import { Link } from "react-router-dom"
 import "./LandingPage.css"
-
+import Navbar from "../../components/Navbar/Navbar"
+import Header from "./LandingpageSections/Header/Header"
+import Solution from "./LandingpageSections/solutions/Solution"
+import AppFeatures from "./LandingpageSections/AppFeatures/AppFeatures"
+import CallToAction from "./LandingpageSections/CallToAction/CallToAction"
+import BasicFeatures from "./LandingpageSections/BasicFeature/BasicFeature"
+import CallToAction2 from "./LandingpageSections/CallToAction2/CallToAction2"
+import FAQs from "./LandingpageSections/FAQs/FAQs"
+import Footer from "../../components/Footer/Footer"
+import ScrollToTop from "../LandingPage/LandingpageSections/ScrollToTop/ScrollToTopButton"
 function LandingPage() {
   return (
     <div className="landing-page">
       {/* Navigation Header */}
-      <nav className="landing-nav">
+      {/* <nav className="landing-nav">
         <div className="nav-container">
           <div className="nav-logo">
             <h2>RideAdmin</h2>
@@ -19,10 +28,19 @@ function LandingPage() {
             </Link>
           </div>
         </div>
-      </nav>
-
+      </nav> */}
+      <Navbar />
+      <Header />
+      <Solution />
+      <AppFeatures />
+      <CallToAction />
+      <BasicFeatures />
+      <CallToAction2 />
+      <FAQs />
+      <ScrollToTop />
+      <Footer />
       {/* Hero Section */}
-      <section className="hero-section">
+      {/* <section className="hero-section">
         <div className="hero-container">
           <div className="hero-content">
             <h1 className="hero-title">
@@ -54,10 +72,10 @@ function LandingPage() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Features Section */}
-      <section id="features" className="features-section">
+      {/* <section id="features" className="features-section">
         <div className="features-container">
           <h2 className="section-title">Powerful Features</h2>
           <div className="features-grid">
@@ -95,10 +113,10 @@ function LandingPage() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Stats Section */}
-      <section className="stats-section">
+      {/* <section className="stats-section">
         <div className="stats-container">
           <div className="stats-grid">
             <div className="stat-item">
@@ -119,10 +137,10 @@ function LandingPage() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* CTA Section */}
-      <section className="cta-section">
+      {/* <section className="cta-section">
         <div className="cta-container">
           <h2 className="cta-title">Ready to Get Started?</h2>
           <p className="cta-description">
@@ -132,10 +150,10 @@ function LandingPage() {
             Access Admin Dashboard
           </Link>
         </div>
-      </section>
+      </section> */}
 
       {/* Footer */}
-      <footer className="landing-footer">
+      {/* <footer className="landing-footer">
         <div className="footer-container">
           <div className="footer-content">
             <div className="footer-section">
@@ -186,7 +204,7 @@ function LandingPage() {
             <p>&copy; 2024 RideAdmin. All rights reserved.</p>
           </div>
         </div>
-      </footer>
+      </footer> */}
     </div>
   )
 }

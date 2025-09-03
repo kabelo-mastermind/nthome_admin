@@ -1,0 +1,259 @@
+/* Header Section Styles */
+.header-section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    background-color: #ffffff;
+    position: relative;
+    overflow: hidden;
+}
+
+.header-container {
+    max-width: 1200px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: flex-start;
+    /* 👈 ensures all children align left */
+}
+
+.header-title,
+.header-description,
+.app-badges {
+    text-align: left;
+    /* 👈 forces text to start at the same left edge */
+}
+
+/* Left Content */
+.header-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.header-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: #212529;
+    margin: 0;
+}
+
+.header-description {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: #6c757d;
+    margin: 0;
+    max-width: 500px;
+}
+
+.app-badges {
+    display: flex;
+    gap: 1rem;
+      align-items: flex-start; /* 👈 align badges to left, not centered */
+}
+
+.app-badge-link {
+    display: inline-block;
+}
+
+.app-badge {
+    height: 60px;
+    width: auto;
+    transition: transform 0.3s ease;
+}
+
+.app-badge:hover {
+    transform: translateY(-2px);
+}
+
+/* Device Mockup Styles */
+.masthead-device-mockup {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Background Circle */
+.masthead-device-mockup .circle {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    z-index: 1;
+}
+
+.masthead-device-mockup .circle circle {
+    fill: url(#circleGradient);
+}
+
+.gradient-start-color {
+    stop-color: #0dcaf0;
+}
+
+.gradient-end-color {
+    stop-color: #3dd5f3;
+}
+
+/* Decorative Shapes */
+.masthead-device-mockup .shape-1 {
+    position: absolute;
+    width: 1rem;
+    height: 1rem;
+    /* repositioned to top-right outside the circle */
+    top: 85%;
+    left: -40%;
+    z-index: 4;
+    opacity: 1;
+    /* display: block !important; */
+}
+
+.masthead-device-mockup .shape-2 {
+    position: absolute;
+    width: 1rem;
+    height: 1rem;
+    /* repositioned to middle-left outside the circle */
+
+    top: -5%;
+    right: -20%;
+    z-index: 4;
+    opacity: 1;
+    display: block !important;
+}
+
+/* Device Wrapper */
+.device-wrapper {
+    position: relative;
+    z-index: 3;
+}
+
+/* iPhone X Device Mockup */
+.device[data-device="iPhoneX"] {
+    width: 230px;
+    height: 460px;
+    padding: 8px;
+    background: #000000;
+    border-radius: 30px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.device[data-device="iPhoneX"]::before {
+    content: "";
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 4px;
+    background: #000000;
+    border-radius: 2px;
+    z-index: 10;
+}
+
+.device[data-device="iPhoneX"] .screen {
+    width: 100%;
+    height: 100%;
+    border-radius: 22px;
+    overflow: hidden;
+    position: relative;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Screen content styling */
+.screen-content {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 22px;
+}
+
+/* Fallback image styling */
+.fallback-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Show fallback image when video fails to load */
+video.screen-content:not([src]):not([srcset])+.fallback-image,
+video.screen-content[src=""]+.fallback-image {
+    display: block !important;
+}
+
+.screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header-container {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        text-align: center;
+    }
+
+    .header-title {
+        font-size: 2.5rem;
+    }
+
+    .masthead-device-mockup .circle {
+        width: 300px;
+        height: 300px;
+    }
+
+    .device[data-device="iPhoneX"] {
+        width: 240px;
+        height: 480px;
+    }
+
+    /* Reduce opacity of shapes on tablet screens */
+    .masthead-device-mockup .shape-1,
+    .masthead-device-mockup .shape-2 {
+        opacity: 0.4;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-section {
+        padding: 2rem 1rem;
+    }
+
+    .header-title {
+        font-size: 2rem;
+    }
+
+    .app-badges {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .masthead-device-mockup .circle {
+        width: 250px;
+        height: 250px;
+    }
+
+    .device[data-device="iPhoneX"] {
+        width: 200px;
+        height: 400px;
+    }
+
+    /* Hide decorative shapes only on very small mobile screens */
+    .masthead-device-mockup .shape-1,
+    .masthead-device-mockup .shape-2 {
+        display: none;
+    }
+}

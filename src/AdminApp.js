@@ -3,7 +3,7 @@
 import { useState } from "react"
 import "./styles/AdminApp.css"
 import Sidebar from "./components/Dashboard/Sidebar"
-import Navbar from "./components/Dashboard/Navbar"
+import Navbar from "./components/Navbar/Navbar"
 
 function AdminApp({ children }) {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(false)

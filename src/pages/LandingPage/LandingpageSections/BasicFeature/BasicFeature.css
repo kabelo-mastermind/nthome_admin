@@ -1,0 +1,128 @@
+.basic-features {
+  background-color: #f8f9fa;
+  padding: 80px 0;
+  min-height: 600px;
+}
+
+.basic-features-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.basic-features-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 60px;
+  min-height: 500px;
+}
+
+.basic-features-text {
+  flex: 1;
+  max-width: 500px;
+}
+
+.basic-features-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #212529;
+  margin-bottom: 2rem;
+  font-family: inherit;
+}
+
+.basic-features-description {
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1.6;
+  color: #6c757d;
+  margin: 0;
+}
+
+.basic-features-image {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 500px;
+}
+
+.image-container {
+  position: relative;
+  width: 400px;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.circular-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.circular-image:hover {
+  transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .basic-features-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 40px;
+  }
+
+  .basic-features-title {
+    font-size: 3rem;
+  }
+
+  .image-container {
+    width: 350px;
+    height: 350px;
+  }
+}
+
+@media (max-width: 768px) {
+  .basic-features {
+    padding: 60px 0;
+  }
+
+  .basic-features-container {
+    padding: 0 15px;
+  }
+
+  .basic-features-title {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .basic-features-description {
+    font-size: 1.1rem;
+  }
+
+  .image-container {
+    width: 300px;
+    height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .basic-features-title {
+    font-size: 2rem;
+  }
+
+  .basic-features-description {
+    font-size: 1rem;
+  }
+
+  .image-container {
+    width: 250px;
+    height: 250px;
+  }
+}

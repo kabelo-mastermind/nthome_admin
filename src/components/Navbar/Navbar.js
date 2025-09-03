@@ -7,7 +7,7 @@ import { useSearch } from "../../contexts/SearchContext"
 import SearchResults from "../Search/SearchResults"
 import "./Navbar.css"
 import { FaRoute, FaSearch } from "react-icons/fa"
-
+import nthomeLogo  from "../../assets/img/nthomeLogo.png"
 const Navbar = ({ toggleSidebar }) => {
   const { theme, toggleTheme, isDark } = useTheme()
   const { searchQuery, setSearchQuery, searchCategory, setSearchCategory } = useSearch()
@@ -69,9 +69,15 @@ const Navbar = ({ toggleSidebar }) => {
                 <div className="menu-icon" onClick={toggleSidebar}>
                   <span className="icon">☰</span>
                 </div>
-                <Link to="/" className="navbar-brand">
-                  <span className="brand-text">NthomeRidez</span>
-                </Link>
+               <Link to="/" className="navbar-brand">
+                <img 
+                  src= {nthomeLogo} // replace with your logo path
+                  alt="Logo" 
+                  className="brand-logo"
+                />
+                <span className="brand-text">Nthome</span>
+              </Link>
+
               </div>
 
               {/* Center - Search */}
