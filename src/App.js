@@ -8,6 +8,10 @@ import CustomersPage from "./pages/Customers/CustomersPage"
 import LandingPage from "./pages/LandingPage/LandingPage"
 import EditDriverForm from "./pages/EditDriver/EditDriverForm"
 import VehiclesPage  from "./pages/Vehicles/VehicleType"
+import Subscribers from "./pages/subscribers/subscribers"
+import DriverEarnings from "./pages/DriverEarnings/DriverEarnings"
+import Subscribers from "./pages/subscribers/subscribers"
+import DriverEarnings from "./pages/DriverEarnings/DriverEarnings"
 import Settings  from "./pages/Setting/Setting"
 import DriverRatingPage  from "./pages/Driver-ratings/DriverRatingsPage"
 
@@ -28,6 +32,10 @@ function App() {
                     <Route path="edit-driver/:userId" element={<EditDriverForm />} /> {/* ✅ FIXED HERE */}
                     <Route path="customerRide" element={<CustomersPage />} />
                     <Route path="vehicle" element={<VehiclesPage />} />
+                    <Route path="subscribers" element={<Subscribers />} />
+                    <Route path="DriverEarnings" element={<DriverEarnings />} />  
+                    <Route path="subscribers" element={<Subscribers />} />
+                    <Route path="DriverEarnings" element={<DriverEarnings />} />  
                     <Route path="driverRatings" element={<DriverRatingPage />} />
                     <Route path="setting" element={<Settings />} />
                   </Routes>
