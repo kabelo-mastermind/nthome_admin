@@ -101,9 +101,10 @@
     height: 100%;
     z-index: 20;
     box-shadow: 0 0 20px var(--shadow);
+    transition: left 0.3s ease;
   }
 
-  .sidebar-responsive {
+  #sidebar.sidebar-responsive {
     left: 0;
   }
 
@@ -113,6 +114,13 @@
     padding: 10px;
     color: var(--sidebar-text);
   }
+}
+/* Make close icon always visible on desktop */
+.close_icon.desktop-visible {
+  display: block;
+  cursor: pointer;
+  padding: 10px;
+  color: var(--sidebar-text);
 }
 
 /* Main content area */

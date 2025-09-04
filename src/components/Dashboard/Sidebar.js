@@ -15,7 +15,7 @@ import {
 } from "react-icons/bs"
 import { FaRegStar, FaTachometerAlt, FaBullhorn } from "react-icons/fa"
 
-function Sidebar({ openSidebarToggle, toggleSidebar }) {
+function Sidebar({ openSidebarToggle, toggleSidebar, isMobile }) {
   const [ridesDropdownOpen, setRidesDropdownOpen] = useState(false)
 
   const toggleRidesDropdown = () => {
@@ -23,10 +23,16 @@ function Sidebar({ openSidebarToggle, toggleSidebar }) {
   }
 
   return (
-    <aside id="sidebar" className={openSidebarToggle ? "sidebar-responsive" : ""}>
+       <aside 
+      id="sidebar" 
+      className={openSidebarToggle ? "sidebar-responsive" : ""}
+    >
       <div className="sidebar-title">
         <h3>RideAdmin</h3>
-        <span className="icon close_icon" onClick={toggleSidebar}>
+          <span 
+          className={`icon close_icon ${isMobile ? "mobile-visible" : "desktop-visible"}`} 
+          onClick={toggleSidebar}
+        >
           ✕
         </span>
       </div>

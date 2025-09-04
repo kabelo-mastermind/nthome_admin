@@ -28,91 +28,92 @@ function AdminHome() {
     }
   }
 
-  useEffect(() => {
-    const fetchDashboardStats = async () => {
-      try {
-        const [
-          totalRidesRes,
-          activeDriversRes,
-          newCustomersRes,
-          newDriversRes,
-          revenueSummaryRes,
-          subscriptionRes,
-        ] = await Promise.all([
-          axios.get(api + "count_trips"),
-          axios.get(api + "approved_drivers"),
-          axios.get(api + "count_customers"),
-          axios.get(api + "count_drivers"),
-          axios.get(api + "payment/summary"),
-          axios.get(api + "count_subscriptions"),
-        ])
+useEffect(() => {
+  const fetchDashboardStats = async () => {
+    try {
+      // Step 1: Fetch main dashboard counts sequentially to reduce simultaneous DB connections
+      const totalRidesRes = await axios.get(api + "count_trips");
+      const activeDriversRes = await axios.get(api + "approved_drivers");
+      const newCustomersRes = await axios.get(api + "count_customers");
+      const newDriversRes = await axios.get(api + "count_drivers");
+      const revenueSummaryRes = await axios.get(api + "payment/summary");
+      const subscriptionRes = await axios.get(api + "count_subscriptions");
 
-        // Fetch feedback list
-        const feedbackListRes = await axios.get(api + "app/feedbacks")
-        const feedbacks = Array.isArray(feedbackListRes.data)
-          ? feedbackListRes.data
-          : feedbackListRes.data.feedbacks || []
+      // Step 2: Fetch feedbacks
+      const feedbackListRes = await axios.get(api + "app/feedbacks");
+      const feedbacks = Array.isArray(feedbackListRes.data)
+        ? feedbackListRes.data
+        : feedbackListRes.data.feedbacks || [];
 
-        // Enrich feedbacks with user details
-        const enrichedFeedbacks = await Promise.all(
-          feedbacks.map(async (fb) => {
-            if (!fb.userId) return { ...fb, user: null }
-            const user = await fetchUser(fb.userId)
-            return { ...fb, user }
-          })
-        )
-
-        // Save enriched feedbacks
-        setRecentFeedback(enrichedFeedbacks)
-
-        // Save stats
-        setStats([
-          {
-            title: "Total Rides",
-            value: totalRidesRes.data.count,
-            description: "All taken trips",
-            icon: "🚗",
-          },
-          {
-            title: "Active Drivers",
-            value: activeDriversRes.data.count,
-            description: "All approved drivers",
-            icon: "👥",
-          },
-          {
-            title: "Total Drivers",
-            value: newDriversRes.data.count,
-            description: "All registered drivers",
-            icon: "🚙",
-          },
-          {
-            title: "Total Customers",
-            value: newCustomersRes.data.count,
-            description: "All registered customers",
-            icon: "⭐",
-          },
-          {
-            title: "Revenue",
-            value: `R${Number(revenueSummaryRes.data.totalRevenue).toLocaleString()}`,
-            description: "All driver earnings",
-            icon: "💰",
-          },
-          {
-            title: "Subscribers",
-            value: subscriptionRes.data.uniqueSubscribers,
-            description: `${subscriptionRes.data.totalSubscriptions} total subscriptions (including plan changes)`,
-            icon: "📦",
-          },
-        ])
-      } catch (err) {
-        console.error("Failed to fetch dashboard stats", err)
-        setError("Something went wrong while loading dashboard stats.")
-      } finally {
-        setLoading(false)
+      // Step 3: Fetch user info for feedbacks sequentially to avoid too many DB connections
+      const enrichedFeedbacks = [];
+      for (const fb of feedbacks) {
+        if (!fb.userId) {
+          enrichedFeedbacks.push({ ...fb, user: null });
+          continue;
+        }
+        try {
+          const user = await fetchUser(fb.userId); // sequential call
+          enrichedFeedbacks.push({ ...fb, user });
+        } catch (err) {
+          console.error(`Failed to fetch user ${fb.userId}:`, err);
+          enrichedFeedbacks.push({ ...fb, user: null });
+        }
       }
+
+      // Step 4: Save enriched feedbacks
+      setRecentFeedback(enrichedFeedbacks);
+
+      // Step 5: Save stats
+      setStats([
+        {
+          title: "Total Rides",
+          value: totalRidesRes.data.count,
+          description: "All taken trips",
+          icon: "🚗",
+        },
+        {
+          title: "Active Drivers",
+          value: activeDriversRes.data.count,
+          description: "All approved drivers",
+          icon: "👥",
+        },
+        {
+          title: "Total Drivers",
+          value: newDriversRes.data.count,
+          description: "All registered drivers",
+          icon: "🚙",
+        },
+        {
+          title: "Total Customers",
+          value: newCustomersRes.data.count,
+          description: "All registered customers",
+          icon: "⭐",
+        },
+        {
+          title: "Revenue",
+          value: `R${Number(revenueSummaryRes.data.totalRevenue).toLocaleString()}`,
+          description: "All driver earnings",
+          icon: "💰",
+        },
+        {
+          title: "Subscribers",
+          value: subscriptionRes.data.uniqueSubscribers,
+          description: `${subscriptionRes.data.totalSubscriptions} total subscriptions (including plan changes)`,
+          icon: "📦",
+        },
+      ]);
+    } catch (err) {
+      console.error("Failed to fetch dashboard stats", err);
+      setError("Something went wrong while loading dashboard stats.");
+    } finally {
+      setLoading(false);
     }
-    fetchDashboardStats()
-  }, [])
+  };
+
+  fetchDashboardStats();
+}, []);
+
 
   // CSV Export function
   const exportFeedbackToCSV = () => {
