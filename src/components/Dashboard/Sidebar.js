@@ -61,13 +61,24 @@ function Sidebar({ openSidebarToggle, toggleSidebar, isMobile }) {
             <span>Vehicle Type</span>
           </Link>
         </li>
-        <li className={`sidebar-list-item ${ridesDropdownOpen ? "open" : ""}`}>
-          <div className="dropdown-toggle" onClick={toggleRidesDropdown}>
-            <BsListCheck className="icon" />
-            <span>Rides</span>
-            <span style={{ marginLeft: "auto", fontSize: "0.8rem" }}>{ridesDropdownOpen ? "▼" : "▶"}</span>
-          </div>
-          <ul className="dropdown-menu">
+        <li className={`sidebar-list-item ${ridesDropdownOpen ? "open" : ""}`}
+    style={{ position: 'relative', zIndex: ridesDropdownOpen ? 100 : 1 }}>
+  <div className="dropdown-toggle" onClick={toggleRidesDropdown}>
+    <BsListCheck className="icon" />
+    <span>Rides</span>
+    <span style={{ marginLeft: "auto", fontSize: "0.8rem" }}>
+      {ridesDropdownOpen ? "▼" : "▶"}
+    </span>
+  </div>
+  <ul className="dropdown-menu" style={{
+    position: 'relative',
+    zIndex: 101,
+    backgroundColor: 'var(--sidebar-bg)',
+    maxHeight: ridesDropdownOpen ? '200px' : '0',
+    overflowY: 'auto',
+    transition: 'max-height 0.3s ease-in-out',
+    boxShadow: ridesDropdownOpen ? '0 4px 12px rgba(0, 0, 0, 0.2)' : 'none'
+  }}>
             <li className="dropdown-item">
               <Link to="/adminapp/trip">
                 <BsFillCalendarCheckFill className="icon" />
