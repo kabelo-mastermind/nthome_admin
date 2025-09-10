@@ -118,7 +118,7 @@ function Sidebar({ openSidebarToggle, toggleSidebar, isMobile }) {
           </Link>
         </li>
         <li className="sidebar-list-item">
-          <Link to="/adminapp/earnings">
+          <Link to="/adminapp/DriverEarnings">
             <FaTachometerAlt className="icon" />
             <span>Driver Earnings</span>
           </Link>
