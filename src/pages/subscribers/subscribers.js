@@ -84,7 +84,7 @@ const Subscribers = () => {
     const fetchSubscribers = async () => {
       try {
         const res = await axios.get(
-          `${API_BASE}/drivers/subscriptions`
+          `${API_BASE}/active_drivers_simple`
         );
         setSubscribers(res.data.drivers || []);
       } catch (err) {
@@ -128,7 +128,7 @@ const Subscribers = () => {
       if (result.isConfirmed) {
         try {
           const res = await fetch(
-            `${API_BASE}/drivers/subscription?id=${subscription_id}`,
+            `${API_BASE}/drivers/subscription/:subscription_id?id=${subscription_id}`,
             {
               method: "DELETE",
             }
