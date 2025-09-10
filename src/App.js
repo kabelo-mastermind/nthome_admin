@@ -12,6 +12,10 @@ import Subscribers from "./pages/subscribers/subscribers"
 import DriverEarnings from "./pages/DriverEarnings/DriverEarnings"
 import Settings  from "./pages/Setting/Setting"
 import DriverRatingPage  from "./pages/Driver-ratings/DriverRatingsPage"
+import PushNotification from "./pages/PushNotifications/PushNotifications"
+import RiderRatingsPage from "./pages/Rider-ratings/RiderRatingsPage"
+import AllRides from "./pages/AllRides/AllRides"
+import ScheduledRides from "./pages/ScheduledRides/ScheduledRides"
 
 function App() {
   return (
@@ -35,7 +39,11 @@ function App() {
                     <Route path="subscribers" element={<Subscribers />} />
                     <Route path="DriverEarnings" element={<DriverEarnings />} />  
                     <Route path="driverRatings" element={<DriverRatingPage />} />
+                    <Route path="riderRatings" element={<RiderRatingsPage />} />
+                    <Route path="push" element={<PushNotification />} />
                     <Route path="setting" element={<Settings />} />
+                    <Route path="trip" element={<AllRides />} />
+                    <Route path="schedule" element={<ScheduledRides />} />
                   </Routes>
                 </AdminApp>
               }
