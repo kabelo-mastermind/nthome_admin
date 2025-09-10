@@ -15,7 +15,7 @@ import {
 } from "react-icons/bs"
 import { FaRegStar, FaTachometerAlt, FaBullhorn } from "react-icons/fa"
 
-function Sidebar({ openSidebarToggle, toggleSidebar }) {
+function Sidebar({ openSidebarToggle, toggleSidebar, isMobile }) {
   const [ridesDropdownOpen, setRidesDropdownOpen] = useState(false)
 
   const toggleRidesDropdown = () => {
@@ -23,10 +23,16 @@ function Sidebar({ openSidebarToggle, toggleSidebar }) {
   }
 
   return (
-    <aside id="sidebar" className={openSidebarToggle ? "sidebar-responsive" : ""}>
+       <aside 
+      id="sidebar" 
+      className={openSidebarToggle ? "sidebar-responsive" : ""}
+    >
       <div className="sidebar-title">
         <h3>RideAdmin</h3>
-        <span className="icon close_icon" onClick={toggleSidebar}>
+          <span 
+          className={`icon close_icon ${isMobile ? "mobile-visible" : "desktop-visible"}`} 
+          onClick={toggleSidebar}
+        >
           ✕
         </span>
       </div>
@@ -55,13 +61,24 @@ function Sidebar({ openSidebarToggle, toggleSidebar }) {
             <span>Vehicle Type</span>
           </Link>
         </li>
-        <li className={`sidebar-list-item ${ridesDropdownOpen ? "open" : ""}`}>
-          <div className="dropdown-toggle" onClick={toggleRidesDropdown}>
-            <BsListCheck className="icon" />
-            <span>Rides</span>
-            <span style={{ marginLeft: "auto", fontSize: "0.8rem" }}>{ridesDropdownOpen ? "▼" : "▶"}</span>
-          </div>
-          <ul className="dropdown-menu">
+        <li className={`sidebar-list-item ${ridesDropdownOpen ? "open" : ""}`}
+    style={{ position: 'relative', zIndex: ridesDropdownOpen ? 100 : 1 }}>
+  <div className="dropdown-toggle" onClick={toggleRidesDropdown}>
+    <BsListCheck className="icon" />
+    <span>Rides</span>
+    <span style={{ marginLeft: "auto", fontSize: "0.8rem" }}>
+      {ridesDropdownOpen ? "▼" : "▶"}
+    </span>
+  </div>
+  <ul className="dropdown-menu" style={{
+    position: 'relative',
+    zIndex: 101,
+    backgroundColor: 'var(--sidebar-bg)',
+    maxHeight: ridesDropdownOpen ? '200px' : '0',
+    overflowY: 'auto',
+    transition: 'max-height 0.3s ease-in-out',
+    boxShadow: ridesDropdownOpen ? '0 4px 12px rgba(0, 0, 0, 0.2)' : 'none'
+  }}>
             <li className="dropdown-item">
               <Link to="/adminapp/trip">
                 <BsFillCalendarCheckFill className="icon" />
@@ -101,7 +118,7 @@ function Sidebar({ openSidebarToggle, toggleSidebar }) {
           </Link>
         </li>
         <li className="sidebar-list-item">
-          <Link to="/adminapp/earnings">
+          <Link to="/adminapp/DriverEarnings">
             <FaTachometerAlt className="icon" />
             <span>Driver Earnings</span>
           </Link>
