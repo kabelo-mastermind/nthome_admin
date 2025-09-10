@@ -10,8 +10,6 @@ import EditDriverForm from "./pages/EditDriver/EditDriverForm"
 import VehiclesPage  from "./pages/Vehicles/VehicleType"
 import Subscribers from "./pages/subscribers/subscribers"
 import DriverEarnings from "./pages/DriverEarnings/DriverEarnings"
-import Subscribers from "./pages/subscribers/subscribers"
-import DriverEarnings from "./pages/DriverEarnings/DriverEarnings"
 import Settings  from "./pages/Setting/Setting"
 import DriverRatingPage  from "./pages/Driver-ratings/DriverRatingsPage"
 
