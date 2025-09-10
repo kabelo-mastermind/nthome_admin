@@ -48,24 +48,25 @@ function RiderRatingsPage() {
         const fetchTrips = async () => {
             try {
                 const response = await axios.get(`${api}allTrips?status=completed`);
-                const tripsWithRatings = response.data.filter(trip => trip.driver_ratings !== null);
+                // Ensure tripsWithRatings is always an array
+                const tripsArray = Array.isArray(response.data)
+                    ? response.data
+                    : response.data.trips || response.data.data || [];
+                const tripsWithRatings = tripsArray.filter(trip => trip.driver_ratings !== null);
 
-               const enrichedTrips = await Promise.all(
-  tripsWithRatings.map(async (trip) => {
-    const customer = await fetchUser(trip.customerId); // now the main one
-    const driver = await fetchUser(trip.driverId);     // secondary
+                const enrichedTrips = await Promise.all(
+                    tripsWithRatings.map(async (trip) => {
+                        const customer = await fetchUser(trip.customerId);
+                        const driver = await fetchUser(trip.driverId);
 
-    return {
-      ...trip,
-      driverName: driver ? `${driver.name} ${driver.lastName || ''}`.trim() : `Driver ${trip.driverId}`,
-      customerName: customer ? `${customer.name} ${customer.lastName || ''}`.trim() : `Customer ${trip.customerId}`,
-
-      // 👇 Swap perspective: show main name from customerId
-      mainName: customer ? `${customer.name} ${customer.lastName || ''}`.trim() : `User ${trip.customerId}`,
-    };
-  })
-);
-
+                        return {
+                            ...trip,
+                            driverName: driver ? `${driver.name} ${driver.lastName || ''}`.trim() : `Driver ${trip.driverId}`,
+                            customerName: customer ? `${customer.name} ${customer.lastName || ''}`.trim() : `Customer ${trip.customerId}`,
+                            mainName: customer ? `${customer.name} ${customer.lastName || ''}`.trim() : `User ${trip.customerId}`,
+                        };
+                    })
+                );
 
                 setTrips(enrichedTrips);
             } catch (err) {

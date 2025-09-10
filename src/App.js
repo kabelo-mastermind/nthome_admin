@@ -14,6 +14,8 @@ import PushNotification from "./pages/PushNotifications/PushNotifications"
 import RiderRatingsPage from "./pages/Rider-ratings/RiderRatingsPage"
 import AllRides from "./pages/AllRides/AllRides"
 import ScheduledRides from "./pages/ScheduledRides/ScheduledRides"
+import CompletedRides from "./pages/CompletedRides/CompletedRides"
+import CancelledRides from "./pages/CancelledRides/CancelledRides"
 
 function App() {
   return (
@@ -38,6 +40,8 @@ function App() {
                     <Route path="setting" element={<Settings />} />
                     <Route path="trip" element={<AllRides />} />
                     <Route path="schedule" element={<ScheduledRides />} />
+                    <Route path="completedRides" element={<CompletedRides />} />
+                    <Route path="cancelled" element={<CancelledRides />} />
                   </Routes>
                 </AdminApp>
               }

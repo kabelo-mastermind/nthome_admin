@@ -1,0 +1,87 @@
+/* === SCHEDULED RIDES SPECIFIC STYLES === */
+
+/* Page title with icon */
+.page-title-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.page-title-icon {
+  font-size: 2rem;
+  color: #3b82f6;
+}
+
+/* Info banner */
+.info-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+  background: #e0f2fe;
+  border: 1px solid #93c5fd;
+  border-radius: 8px;
+  color: #0369a1;
+}
+
+.info-banner-icon {
+  flex-shrink: 0;
+}
+
+.info-banner p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* Scheduled card specific styles */
+.scheduled-card {
+  border-left: 4px solid #3b82f6;
+}
+
+.scheduled-card .status-badge {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+/* Empty state for scheduled rides */
+.empty-state .empty-icon {
+  color: #93c5fd;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .page-title-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .page-title-icon {
+    font-size: 1.5rem;
+  }
+  
+  .info-banner {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+  }
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .info-banner {
+    background: #1e3a8a;
+    border-color: #3b82f6;
+    color: #dbeafe;
+  }
+  
+  .scheduled-card {
+    border-left-color: #3b82f6;
+  }
+  
+  .scheduled-card .status-badge {
+    background: #1e3a8a;
+    color: #dbeafe;
+  }
+}

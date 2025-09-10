@@ -48,7 +48,12 @@ function DriverRatingsPage() {
         const fetchTrips = async () => {
             try {
                 const response = await axios.get(`${api}allTrips?status=completed`);
-                const tripsWithRatings = response.data.filter(trip => trip.driver_ratings !== null);
+                // Instead of: const tripsWithRatings = response.data.filter(...)
+                // Try:
+                const tripsArray = Array.isArray(response.data) 
+                    ? response.data 
+                    : response.data.trips || response.data.data || [];
+                const tripsWithRatings = tripsArray.filter(trip => trip.driver_ratings !== null);
 
                 const enrichedTrips = await Promise.all(
                     tripsWithRatings.map(async (trip) => {
@@ -180,9 +185,6 @@ function DriverRatingsPage() {
     return (
         <div className={`ratings-page ${isDark ? 'dark-theme' : ''}`}>
             <h1>Driver Ratings</h1>
-
-          
-
             {/* Filters and Search */}
             <div className="filters-container">
                 <div className="search-box">
