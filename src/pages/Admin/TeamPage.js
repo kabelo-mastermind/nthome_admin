@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import "./TeamPage.css";
 import { FaPlus, FaDownload } from "react-icons/fa";
 import { api } from "../../api";
 import toast, { Toaster } from "react-hot-toast";
+import "./TeamPage.css";
 
 // Icons
 const EyeIcon = () => (
@@ -29,16 +29,12 @@ export default function TeamPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-
-  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const adminsPerPage = 5;
 
-  // Sorting
   const [sortField, setSortField] = useState("name");
   const [sortOrder, setSortOrder] = useState("asc");
 
-  // Modals
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -55,7 +51,6 @@ export default function TeamPage() {
     password: "",
   });
 
-  // Fetch admins
   const fetchAdmins = async () => {
     try {
       const res = await axios.get(api + "admins");
@@ -67,35 +62,20 @@ export default function TeamPage() {
     }
   };
 
-  useEffect(() => {
-    fetchAdmins();
-  }, []);
+  useEffect(() => { fetchAdmins(); }, []);
 
-  // Search + Sort
   const filteredAdmins = admins
     .filter(a => `${a.name} ${a.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()))
-    .sort((a, b) => {
-      if (sortField === "name") {
-        return sortOrder === "asc"
-          ? a.name.localeCompare(b.name)
-          : b.name.localeCompare(a.name);
-      }
-      if (sortField === "email") {
-        return sortOrder === "asc"
-          ? a.email.localeCompare(b.email)
-          : b.email.localeCompare(a.email);
-      }
-      return 0;
+    .sort((a,b)=>{
+      const fieldA = a[sortField]?.toLowerCase() || "";
+      const fieldB = b[sortField]?.toLowerCase() || "";
+      return sortOrder === "asc" ? fieldA.localeCompare(fieldB) : fieldB.localeCompare(fieldA);
     });
 
-  // Pagination slice
-  const paginatedAdmins = filteredAdmins.slice(
-    (currentPage - 1) * adminsPerPage,
-    currentPage * adminsPerPage
-  );
+  const paginatedAdmins = filteredAdmins.slice((currentPage-1)*adminsPerPage, currentPage*adminsPerPage);
   const totalPages = Math.ceil(filteredAdmins.length / adminsPerPage);
 
-  // ---------- MODAL HANDLERS ----------
+  // Modal handlers
   const openDetailsModal = admin => { setCurrentAdmin(admin); setDetailsModalOpen(true); };
   const closeDetailsModal = () => { setCurrentAdmin(null); setDetailsModalOpen(false); };
   const openEditModal = admin => {
@@ -116,79 +96,95 @@ export default function TeamPage() {
   const openAddModal = () => { setAddModalOpen(true); setFormData({name:"",lastName:"",email:"",phoneNumber:"",gender:"",address:"",profile_picture:"",password:""}); };
   const closeAddModal = () => setAddModalOpen(false);
 
-  // ---------- ACTIONS ----------
+  // Actions
   const handleAddSubmit = async e => {
     e.preventDefault();
     try { await axios.post(api + "admins", formData); toast.success("Admin added!"); fetchAdmins(); closeAddModal(); }
-    catch (err) { toast.error("Failed to add admin."); }
+    catch { toast.error("Failed to add admin."); }
   };
 
   const handleEditSubmit = async e => {
     e.preventDefault();
     try { await axios.put(api + "admins/" + currentAdmin.admin_id, formData); toast.success("Admin updated!"); fetchAdmins(); closeEditModal(); }
-    catch (err) { toast.error("Failed to update admin."); }
+    catch { toast.error("Failed to update admin."); }
   };
 
   const handleDeleteAdmin = async id => {
-    if (!window.confirm("Are you sure you want to delete this member?")) return;
+    if(!window.confirm("Are you sure you want to delete this member?")) return;
     try { await axios.delete(api + "admins/" + id); toast.success("Admin deleted!"); fetchAdmins(); }
-    catch (err) { toast.error("Failed to delete admin."); }
+    catch { toast.error("Failed to delete admin."); }
   };
 
   const handleExportCSV = () => { window.open(api + "admins/export/csv"); };
 
-  if (loading) return <p className="p-6 text-gray-500">Loading team...</p>;
+  if (loading) return (
+    <div className="loading-state">
+      <div className="loading-spinner"></div>
+      Loading team...
+    </div>
+  );
+
   if (error) return <p className="p-6 text-red-500">{error}</p>;
 
   return (
-    <div className="team-page">
+    <div className="admin-rides-page">
       <Toaster position="top-right" />
-      <div className="team-header">
+
+      {/* Header */}
+      <div className="page-header">
         <h1>Team Members</h1>
-        <div className="team-actions">
-          <button className="add-btn" onClick={openAddModal}><FaPlus /> Add Member</button>
-          <button className="download-btn" onClick={handleExportCSV}><FaDownload /> CSV</button>
+        <div className="header-actions">
+          <button className="export-csv-btn" onClick={handleExportCSV}><FaDownload /> Export CSV</button>
+          <button className="filter-toggle" onClick={openAddModal}><FaPlus /> Add Member</button>
         </div>
       </div>
 
-      <div className="team-filters">
-        <input type="text" placeholder="Search..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
-        <select value={sortField} onChange={e => setSortField(e.target.value)}>
-          <option value="name">Name</option>
-          <option value="email">Email</option>
-        </select>
-        <select value={sortOrder} onChange={e => setSortOrder(e.target.value)}>
-          <option value="asc">Asc</option>
-          <option value="desc">Desc</option>
-        </select>
+      {/* Filters */}
+      <div className="controls-container">
+        <div className="search-box">
+          <input
+            className="search-input"
+            type="text"
+            placeholder="Search by name..."
+            value={searchTerm}
+            onChange={e=>setSearchTerm(e.target.value)}
+          />
+        </div>
+        <div className="filters-panel">
+          <div className="filter-group">
+            <label>Sort Field</label>
+            <select className="filter-select" value={sortField} onChange={e=>setSortField(e.target.value)}>
+              <option value="name">Name</option>
+              <option value="email">Email</option>
+            </select>
+          </div>
+          <div className="filter-group">
+            <label>Sort Order</label>
+            <select className="filter-select" value={sortOrder} onChange={e=>setSortOrder(e.target.value)}>
+              <option value="asc">Ascending</option>
+              <option value="desc">Descending</option>
+            </select>
+          </div>
+        </div>
       </div>
 
-      <div className="team-card-list">
-        {paginatedAdmins.length > 0 ? paginatedAdmins.map(a => (
-          <div className="team-card" key={a.admin_id}>
-            <div className="team-card-header">
-              <div className="team-card-info">
-                <img
-                  src={a.profile || "/images/placeholder.jpg"}
-                  alt={a.name}
-                  className="team-card-avatar"
-                  title={`${a.name} ${a.lastName}\n${a.email}`}
-                />
-                <div>
-                  <h2>{a.name} {a.lastName}</h2>
-                  <p>{a.email}</p>
-                </div>
-              </div>
+      {/* Team Cards */}
+      <div className="rides-grid">
+        {paginatedAdmins.length>0 ? paginatedAdmins.map(admin=>(
+          <div className="ride-card" key={admin.admin_id}>
+            <div className="card-header">
+              <div className="ride-id">{admin.name} {admin.lastName}</div>
             </div>
-            <div className="team-card-section">
-              <p><strong>Phone:</strong> {a.contacts}</p>
-              <p><strong>Gender:</strong> {a.gender}</p>
-              <p><strong>Address:</strong> {a.address}</p>
+            <div className="card-content">
+              <div className="info-row"><span className="label">Email:</span> <span className="value">{admin.email}</span></div>
+              <div className="info-row"><span className="label">Phone:</span> <span className="value">{admin.contacts}</span></div>
+              <div className="info-row"><span className="label">Gender:</span> <span className="value">{admin.gender}</span></div>
+              <div className="info-row"><span className="label">Address:</span> <span className="value">{admin.address}</span></div>
             </div>
-            <div className="team-card-actions">
-              <button onClick={()=>openDetailsModal(a)}><EyeIcon /></button>
-              <button onClick={()=>openEditModal(a)}><EditIcon /></button>
-              <button className="delete" onClick={()=>handleDeleteAdmin(a.admin_id)}><TrashIcon /></button>
+            <div className="card-actions">
+              <button className="view-details-btn" onClick={()=>openDetailsModal(admin)}><EyeIcon /> View</button>
+              <button className="edit-btn" onClick={()=>openEditModal(admin)}><EditIcon /> Edit</button>
+              <button className="delete-btn" onClick={()=>handleDeleteAdmin(admin.admin_id)}><TrashIcon /> Delete</button>
             </div>
           </div>
         )) : <p>No team members found.</p>}
@@ -196,71 +192,89 @@ export default function TeamPage() {
 
       {/* Pagination */}
       <div className="pagination">
-        {Array.from({length: totalPages}, (_, i) => (
-          <button
-            key={i}
-            className={i+1===currentPage?"active":""}
-            onClick={()=>setCurrentPage(i+1)}
-          >
-            {i+1}
-          </button>
+        {Array.from({length: totalPages}, (_,i)=>(
+          <button key={i} className={i+1===currentPage?"active":""} onClick={()=>setCurrentPage(i+1)}>{i+1}</button>
         ))}
       </div>
 
-      {/* Modals (Details / Add / Edit) */}
+      {/* Details Modal */}
       {detailsModalOpen && currentAdmin && (
         <div className="modal-overlay" onClick={closeDetailsModal}>
           <div className="modal-content" onClick={e=>e.stopPropagation()}>
-            <h3>{currentAdmin.name} {currentAdmin.lastName}</h3>
-            <ul>
-              <li>Email: {currentAdmin.email}</li>
-              <li>Phone: {currentAdmin.contacts}</li>
-              <li>Gender: {currentAdmin.gender}</li>
-              <li>Address: {currentAdmin.address}</li>
-            </ul>
-            <button onClick={closeDetailsModal}>Close</button>
+            <div className="modal-header">
+              <h2>{currentAdmin.name} {currentAdmin.lastName}</h2>
+              <button className="modal-close" onClick={closeDetailsModal}>×</button>
+            </div>
+            <div className="modal-body">
+              <div className="detail-grid">
+                <div className="detail-group">
+                  <h3>Contact Info</h3>
+                  <div className="detail-item"><span className="detail-label">Email:</span> <span className="detail-value">{currentAdmin.email}</span></div>
+                  <div className="detail-item"><span className="detail-label">Phone:</span> <span className="detail-value">{currentAdmin.contacts}</span></div>
+                </div>
+                <div className="detail-group">
+                  <h3>Personal Info</h3>
+                  <div className="detail-item"><span className="detail-label">Gender:</span> <span className="detail-value">{currentAdmin.gender}</span></div>
+                  <div className="detail-item"><span className="detail-label">Address:</span> <span className="detail-value">{currentAdmin.address}</span></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}
 
+      {/* Add Modal */}
       {addModalOpen && (
         <div className="modal-overlay" onClick={closeAddModal}>
-          <div className="modal-content" onClick={e=>e.stopPropagation()}>
-            <h3>Add Admin</h3>
-            <form onSubmit={handleAddSubmit}>
-              <input placeholder="Name" required value={formData.name} onChange={e=>setFormData({...formData,name:e.target.value})}/>
-              <input placeholder="Last Name" required value={formData.lastName} onChange={e=>setFormData({...formData,lastName:e.target.value})}/>
-              <input placeholder="Email" type="email" required value={formData.email} onChange={e=>setFormData({...formData,email:e.target.value})}/>
-              <input placeholder="Phone" value={formData.phoneNumber} onChange={e=>setFormData({...formData,phoneNumber:e.target.value})}/>
-              <input placeholder="Gender" value={formData.gender} onChange={e=>setFormData({...formData,gender:e.target.value})}/>
-              <input placeholder="Address" value={formData.address} onChange={e=>setFormData({...formData,address:e.target.value})}/>
-              <input placeholder="Profile URL" value={formData.profile_picture} onChange={e=>setFormData({...formData,profile_picture:e.target.value})}/>
-              <input placeholder="Password" type="password" required value={formData.password} onChange={e=>setFormData({...formData,password:e.target.value})}/>
-              <button type="submit">Save</button>
-            </form>
-            <button onClick={closeAddModal}>Close</button>
+          <div className="modal-content edit-modal" onClick={e=>e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Add Team Member</h2>
+              <button className="modal-close" onClick={closeAddModal}>×</button>
+            </div>
+            <div className="modal-body">
+              <form onSubmit={handleAddSubmit}>
+                {["name","lastName","email","phoneNumber","gender","address","profile_picture","password"].map(field=>(
+                  <div className="form-group" key={field}>
+                    <label>{field.charAt(0).toUpperCase()+field.slice(1)}</label>
+                    <input type={field==="password"?"password":"text"} value={formData[field]} onChange={e=>setFormData({...formData,[field]:e.target.value})} required />
+                  </div>
+                ))}
+                <div className="modal-actions">
+                  <button type="button" className="cancel-btn" onClick={closeAddModal}>Cancel</button>
+                  <button type="submit" className="save-btn">Add</button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       )}
 
-      {editModalOpen && (
+      {/* Edit Modal */}
+      {editModalOpen && currentAdmin && (
         <div className="modal-overlay" onClick={closeEditModal}>
-          <div className="modal-content" onClick={e=>e.stopPropagation()}>
-            <h3>Edit Admin</h3>
-            <form onSubmit={handleEditSubmit}>
-              <input placeholder="Name" required value={formData.name} onChange={e=>setFormData({...formData,name:e.target.value})}/>
-              <input placeholder="Last Name" required value={formData.lastName} onChange={e=>setFormData({...formData,lastName:e.target.value})}/>
-              <input placeholder="Email" type="email" required value={formData.email} onChange={e=>setFormData({...formData,email:e.target.value})}/>
-              <input placeholder="Phone" value={formData.phoneNumber} onChange={e=>setFormData({...formData,phoneNumber:e.target.value})}/>
-              <input placeholder="Gender" value={formData.gender} onChange={e=>setFormData({...formData,gender:e.target.value})}/>
-              <input placeholder="Address" value={formData.address} onChange={e=>setFormData({...formData,address:e.target.value})}/>
-              <input placeholder="Profile URL" value={formData.profile_picture} onChange={e=>setFormData({...formData,profile_picture:e.target.value})}/>
-              <button type="submit">Update</button>
-            </form>
-            <button onClick={closeEditModal}>Close</button>
+          <div className="modal-content edit-modal" onClick={e=>e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Edit {currentAdmin.name}</h2>
+              <button className="modal-close" onClick={closeEditModal}>×</button>
+            </div>
+            <div className="modal-body">
+              <form onSubmit={handleEditSubmit}>
+                {["name","lastName","email","phoneNumber","gender","address","profile_picture","password"].map(field=>(
+                  <div className="form-group" key={field}>
+                    <label>{field.charAt(0).toUpperCase()+field.slice(1)}</label>
+                    <input type={field==="password"?"password":"text"} value={formData[field]} onChange={e=>setFormData({...formData,[field]:e.target.value})} />
+                  </div>
+                ))}
+                <div className="modal-actions">
+                  <button type="button" className="cancel-btn" onClick={closeEditModal}>Cancel</button>
+                  <button type="submit" className="save-btn">Save</button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       )}
+
     </div>
   );
 }
