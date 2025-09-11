@@ -136,7 +136,7 @@ function Sidebar({ openSidebarToggle, toggleSidebar, isMobile }) {
           </Link>
         </li>
         <li className="sidebar-list-item">
-          <Link to="/adminapp/adminList">
+          <Link to="/adminapp/team">
             <BsPeopleFill className="icon" />
             <span>Team</span>
           </Link>
