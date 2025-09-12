@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { api } from "../../api";
 import { 
   FaUser, 
   FaTimes, 
@@ -12,6 +13,7 @@ import {
   FaWallet,
   FaClock
 } from "react-icons/fa";
+const API_BASE = "https://tech-wise-server-brown.vercel.app/api";
 
 export default function DriverEarnings() {
   const [selectedDriver, setSelectedDriver] = useState(null);
@@ -30,7 +32,7 @@ export default function DriverEarnings() {
     const fetchDriverEarnings = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:3000/api/drivers/earnings');
+        const response = await fetch(`${API_BASE}/drivers/earnings`);
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
