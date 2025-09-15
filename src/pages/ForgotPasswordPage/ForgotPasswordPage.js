@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../configs/FirebaseConfig";
-import { sendPasswordResetEmail } from "firebase/auth";
+import {
+  sendPasswordResetEmail,
+  fetchSignInMethodsForEmail,
+} from "firebase/auth";
 import { showToast } from "../../constants/ShowToast";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
@@ -20,12 +23,22 @@ const ForgotPasswordPage = () => {
 
     setIsLoading(true);
     try {
+      // ✅ First check if email exists
+      const methods = await fetchSignInMethodsForEmail(auth, email);
+      if (methods.length === 0) {
+        showToast("error", "No account found with this email. Please check and try again.");
+
+        setIsLoading(false);
+        return;
+      }
+
+      // ✅ If exists, send reset email
       await sendPasswordResetEmail(auth, email);
       showToast(
         "success",
         "Password Reset Sent",
         "Check your email (including spam) for the reset link.",
-        { duration: 5000 } // duration in milliseconds (3 seconds)
+        { duration: 4000 }
       );
 
       navigate("/login");
@@ -83,7 +96,9 @@ const ForgotPasswordPage = () => {
 
           {/* Back to Login */}
           <div className="signup-card-login-container">
-            <span className="signup-card-login-text">Remembered your password?</span>
+            <span className="signup-card-login-text">
+              Remembered your password?
+            </span>
             <span
               className="signup-card-login-link"
               onClick={() => navigate("/login")}
