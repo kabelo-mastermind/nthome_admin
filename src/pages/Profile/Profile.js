@@ -4,13 +4,15 @@ import { api } from "../../api";
 import { useDispatch, useSelector } from "react-redux";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from "../../configs/firebase";
+// import CustomDrawer from "../components/CustomDrawer";
+// import LoadingState from "../components/LoadingState";
 import { showToast } from "../../constants/ShowToast";
+import "./Profile.css"; // Add a separate CSS file with styles
 import { setUser } from "../../contexts/redux/actions/authActions";
 import { useNavigate } from "react-router-dom";
-import "./CustomerPage.css";
 
 // Memoized components
-const ProfileHeader = memo(({ customerData, uploadingImage, pickImage, formData, isProfileComplete, genderColor }) => (
+const ProfileHeader = memo(({ customerData, uploadingImage, pickImage, formData, isProfileComplete }) => (
     <div className="profile-header">
         <div className="profile-image-container">
             {uploadingImage ? (
@@ -20,15 +22,10 @@ const ProfileHeader = memo(({ customerData, uploadingImage, pickImage, formData,
                     src={customerData?.profile_picture || "/placeholder.jpg"}
                     alt="Profile"
                     className="profile-image"
-                    style={{ borderColor: genderColor.primary }}
                 />
             )}
-            <button 
-                className="camera-button" 
-                onClick={pickImage}
-                style={{ backgroundColor: genderColor.primary }}
-            >📷</button>
-            <div className="status-badge">Active</div>
+            <button className="camera-button" onClick={pickImage}>📷</button>
+            <div className="status-badges">Active</div>
         </div>
 
         <h2 className="profile-name">{customerData?.name} {customerData?.lastName}</h2>
@@ -55,8 +52,7 @@ const ProfileHeader = memo(({ customerData, uploadingImage, pickImage, formData,
                                     phoneNumber: formData.phoneNumber,
                                 }).filter(Boolean).length * 25
                             )
-                            }%`,
-                        backgroundColor: genderColor.primary
+                            }%`
                     }}
                 />
             </div>
@@ -98,17 +94,13 @@ const FormGroup = memo(({ label, value, onChange, placeholder, type = "text", mu
     </div>
 ));
 
-const GenderSelector = memo(({ selectedGender, onSelect, genderColor }) => (
+const GenderSelector = memo(({ selectedGender, onSelect }) => (
     <div className="gender-options">
-        {["Male", "Female", "Other"].map((gender) => (
+        {["Male", "Female"].map((gender) => (
             <button
                 key={gender}
                 className={`gender-option ${selectedGender === gender ? "selected" : ""}`}
                 onClick={() => onSelect(gender)}
-                style={selectedGender === gender ? { 
-                    backgroundColor: genderColor.primary, 
-                    borderColor: genderColor.primary 
-                } : {}}
             >
                 {gender}
             </button>
@@ -116,19 +108,14 @@ const GenderSelector = memo(({ selectedGender, onSelect, genderColor }) => (
     </div>
 ));
 
-const CardButton = memo(({ title, onClick, disabled, genderColor }) => (
-    <button 
-        className={`card-button ${disabled ? "disabled" : ""}`} 
-        onClick={onClick} 
-        disabled={disabled}
-        style={!disabled ? { backgroundColor: genderColor.primary } : {}}
-    >
+const CardButton = memo(({ title, onClick, disabled }) => (
+    <button className={`card-button ${disabled ? "disabled" : ""}`} onClick={onClick} disabled={disabled}>
         {title} →
     </button>
 ));
 
 
-const CustomerProfile = ({ navigation }) => {
+const Profile = ({ navigation }) => {
     const [customerData, setCustomerData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -142,6 +129,10 @@ const CustomerProfile = ({ navigation }) => {
     const user = useSelector((state) => state.auth?.user);
     const user_id = user?.user_id;
     const username = user?.name;
+    const role = user?.role;
+    const gender = user?.gender;
+    console.log("User rol---------e:", user);
+
 
     const [formData, setFormData] = useState({
         name: "",
@@ -155,45 +146,18 @@ const CustomerProfile = ({ navigation }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    // Define color schemes based on gender
-    const genderColors = {
-        Female: {
-            primary: "#ff69b4", // Pink
-            secondary: "#ffcce6", // Light pink
-            text: "#333333"
-        },
-        Male: {
-            primary: "#3498db", // Blue
-            secondary: "#d6eaf8", // Light blue
-            text: "#333333"
-        },
-        Other: {
-            primary: "#9b59b6", // Purple
-            secondary: "#e8daef", // Light purple
-            text: "#333333"
-        },
-        Default: {
-            primary: "#ff69b4", // Default to pink
-            secondary: "#ffcce6",
-            text: "#333333"
-        }
-    };
-
-    // Get the appropriate color scheme based on gender
-    const getGenderColor = () => {
-        const gender = formData.gender || customerData?.gender;
-        return genderColors[gender] || genderColors.Default;
-    };
-
-    const genderColor = getGenderColor();
-
+    //   const toggleDrawer = () => setDrawerOpen((prev) => !prev);
     // Logout function
     const handleLogout = async () => {
         try {
+            // Clear Redux user state
             dispatch(setUser(null));
-            localStorage.removeItem("reduxState");
-            localStorage.removeItem("persist:root");
-            
+
+            // Clear localStorage / persisted data if you store auth there
+            localStorage.removeItem("reduxState"); // adjust key if different
+            localStorage.removeItem("persist:root"); // if using redux-persist
+
+            // Optional: Clear Firebase auth persistence
             if (user?.uid) {
                 await import("firebase/auth").then(({ getAuth, signOut }) => {
                     const auth = getAuth();
@@ -202,13 +166,14 @@ const CustomerProfile = ({ navigation }) => {
             }
 
             showToast("success", "Logged Out", "You have successfully logged out!");
+
+            // Redirect to login or home page
             navigate("/login", { replace: true });
         } catch (err) {
             showToast("error", "Logout Failed", "Failed to log you out. Please try again.");
             console.error("Logout error:", err);
         }
     };
-
     // Fetch customer data
     useEffect(() => {
         if (!user_id) return;
@@ -262,10 +227,11 @@ const CustomerProfile = ({ navigation }) => {
         };
         fileInput.click();
     };
-
     const uploadProfileImage = async (file) => {
         try {
             setUploadingImage(true);
+
+            // Create a storage reference
             const storageRef = ref(storage, `profile_pictures/${username}_${user_id}/${file.name}`);
             const uploadTask = uploadBytesResumable(storageRef, file);
 
@@ -277,17 +243,30 @@ const CustomerProfile = ({ navigation }) => {
                     setUploadingImage(false);
                 },
                 async () => {
+                    // Upload completed, get the download URL
                     const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+
+                    // Update profile picture in your backend
                     const res = await axios.post(`${api}update-profile-picture`, {
                         profile_picture: downloadURL,
                         user_id,
                     });
 
                     if (res.status === 200) {
+                        // Update local state
                         setCustomerData((prev) => ({ ...prev, profile_picture: downloadURL }));
-                        dispatch(setUser({ ...user, profile_picture: downloadURL }));
+
+                        // Update Redux store with new profile picture URL
+                        dispatch(
+                            setUser({
+                                ...user, // keep existing Redux user fields
+                                profile_picture: downloadURL,
+                            })
+                        );
+
                         showToast("success", "Profile Updated", "Profile picture updated successfully!");
                     }
+
                     setUploadingImage(false);
                 }
             );
@@ -330,6 +309,7 @@ const CustomerProfile = ({ navigation }) => {
 
         setIsSaving(true);
         try {
+            // Create customer code if missing
             let newCustomerCode = customerCode;
             if (!newCustomerCode) {
                 const response = await axios.post(api + "create-customer", {
@@ -362,17 +342,20 @@ const CustomerProfile = ({ navigation }) => {
         }
     };
 
+    //   if (loading) return <LoadingState />;
     if (error) return <div className="error">{error}</div>;
 
     return (
-        <div className="customer-profile-container">
+        <div className="customer-profile-container" data-gender={gender}>
             {loading && (
                 <div className="loading-overlay">
                     <div className="loading-spinner"></div>
                     <div className="loading-text">Loading profile...</div>
                 </div>
             )}
+            {/* {drawerOpen && <CustomDrawer isOpen={drawerOpen} toggleDrawer={toggleDrawer} />} */}
             <header className="header">
+                {/* <button onClick={toggleDrawer}>☰</button> */}
                 <h1>My Profile</h1>
                 <button onClick={toggleEditMode}>{editMode ? "✔️" : "✏️"}</button>
             </header>
@@ -383,7 +366,6 @@ const CustomerProfile = ({ navigation }) => {
                 pickImage={pickImage}
                 formData={formData}
                 isProfileComplete={isProfileComplete}
-                genderColor={genderColor}
             />
 
             <div className="card">
@@ -396,7 +378,7 @@ const CustomerProfile = ({ navigation }) => {
                         <FormGroup label="Phone" value={formData.phoneNumber} onChange={(v) => handleInputChange("phoneNumber", v)} placeholder="Enter phone" type="tel" />
                         <div>
                             <label>Gender</label>
-                            <GenderSelector selectedGender={formData.gender} onSelect={(v) => handleInputChange("gender", v)} genderColor={genderColor} />
+                            <GenderSelector selectedGender={formData.gender} onSelect={(v) => handleInputChange("gender", v)} />
                         </div>
                     </>
                 ) : (
@@ -423,22 +405,22 @@ const CustomerProfile = ({ navigation }) => {
                 )}
 
                 {editMode && (
-                    <button 
-                        onClick={saveAllChanges} 
+                    <button
+                        onClick={saveAllChanges}
                         disabled={isSaving}
-                        style={{ backgroundColor: genderColor.primary }}
                         className="save-button"
                     >
                         {isSaving ? "Saving..." : "Save Changes"}
                     </button>
                 )}
+
             </div>
 
             <div className="card">
                 <h3>Trip History</h3>
                 <div>Total Trips: {totalCompletedTrips}</div>
+                {/* <CardButton title="View Trip History" onClick={() => navigation.navigate("TripHistory")} /> */}
             </div>
-            
             <div className="card logout-card">
                 <button
                     className="logout-button"
@@ -447,8 +429,9 @@ const CustomerProfile = ({ navigation }) => {
                     Logout
                 </button>
             </div>
+
         </div>
     );
 };
 
-export default CustomerProfile;
+export default Profile;

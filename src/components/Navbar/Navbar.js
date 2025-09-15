@@ -1,160 +1,144 @@
-"use client"
-
-import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { useEffect, useState, useRef } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import { useTheme } from "../../contexts/ThemeContext"
 import { useSearch } from "../../contexts/SearchContext"
 import SearchResults from "../Search/SearchResults"
 import "./Navbar.css"
 import { FaRoute, FaSearch } from "react-icons/fa"
-import nthomeLogo  from "../../assets/img/nthomeLogo.png"
+import nthomeLogo from "../../assets/img/nthomeLogo.png"
+import { showToast } from "../../constants/ShowToast";
+import { setUser } from "../../contexts/redux/actions/authActions";
+import { useDispatch, useSelector } from "react-redux";
+
 const Navbar = ({ toggleSidebar }) => {
   const { theme, toggleTheme, isDark } = useTheme()
   const { searchQuery, setSearchQuery, searchCategory, setSearchCategory } = useSearch()
+  const navigate = useNavigate()
+  const dispatch = useDispatch();
 
-  // Dummy login details
-  const [userName] = useState("John Admin")
-  const [roles] = useState("admin")
-  const [userId] = useState("admin123")
+  const user = useSelector((state) => state.auth.user)
+  console.log("user in navbar:", user);
+
   const [isDropdownOpen, setDropdownOpen] = useState(false)
   const [profilePicture, setProfilePicture] = useState("")
   const [isSiteDropdownOpen, setSiteDropdownOpen] = useState(false)
   const [showSearchResults, setShowSearchResults] = useState(false)
 
+  // Refs for detecting outside click
+  const siteDropdownRef = useRef(null)
+  const profileDropdownRef = useRef(null)
+
   useEffect(() => {
-    // Dummy profile picture - using a placeholder
-    setProfilePicture("https://via.placeholder.com/40x40/0dcaf0/ffffff?text=JA")
-  }, [userId])
+    if (user?.id) {
+      setProfilePicture(
+        user.profile_picture || "https://via.placeholder.com/40x40/0dcaf0/ffffff?text=JA"
+      )
+    }
+  }, [user])
 
-  const toggleDropdown = () => {
-    setDropdownOpen(!isDropdownOpen)
-  }
+  const toggleDropdown = () => setDropdownOpen((prev) => !prev)
+  const toggleSiteDropdown = () => setSiteDropdownOpen((prev) => !prev)
 
-  const toggleSiteDropdown = () => {
-    setSiteDropdownOpen(!isSiteDropdownOpen)
-  }
+  // ✅ Close dropdowns when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        siteDropdownRef.current &&
+        !siteDropdownRef.current.contains(event.target)
+      ) {
+        setSiteDropdownOpen(false)
+      }
+      if (
+        profileDropdownRef.current &&
+        !profileDropdownRef.current.contains(event.target)
+      ) {
+        setDropdownOpen(false)
+      }
+    }
 
-  const handleLogout = () => {
-    // Dummy logout - just redirect to landing page
-    window.location.href = "/"
-  }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
 
-  const handleSearchFocus = () => {
-    setShowSearchResults(true)
-  }
+  const handleLogout = async () => {
+    try {
+      dispatch(setUser(null))
+      localStorage.removeItem("reduxState")
+      localStorage.removeItem("persist:root")
 
+      if (user?.uid) {
+        await import("firebase/auth").then(({ getAuth, signOut }) => {
+          const auth = getAuth();
+          signOut(auth);
+        });
+      }
+
+      showToast("success", "Logged Out", "You have successfully logged out!");
+      navigate("/login", { replace: true })
+    } catch (err) {
+      showToast("error", "Logout Failed", "Failed to log you out. Please try again.");
+      console.error("Logout error:", err);
+    }
+  };
+
+  const handleLogin = () => navigate("/login")
+
+  const handleSearchFocus = () => setShowSearchResults(true)
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value)
-    if (e.target.value.trim()) {
-      setShowSearchResults(true)
-    }
+    if (e.target.value.trim()) setShowSearchResults(true)
   }
-
   const handleSearchSubmit = (e) => {
     e.preventDefault()
-    if (searchQuery.trim()) {
-      setShowSearchResults(true)
-    }
+    if (searchQuery.trim()) setShowSearchResults(true)
   }
 
   return (
     <>
       <nav className="admin-navbar">
         <div className="navbar-main-container">
-          
-            <div className="navbar-container">
-              {/* Left side - Menu toggle and brand */}
-
-              <div className="navbar-left">
-                <div className="menu-icon" onClick={toggleSidebar}>
-                  <span className="icon">☰</span>
-                </div>
-               <Link to="/" className="navbar-brand">
-                <img 
-                  src= {nthomeLogo} // replace with your logo path
-                  alt="Logo" 
-                  className="brand-logo"
-                />
+          <div className="navbar-container">
+            {/* Left side */}
+            <div className="navbar-left">
+              <div className="menu-icon" onClick={toggleSidebar}>
+                <span className="icon">☰</span>
+              </div>
+              <Link to="/" className="navbar-brand">
+                <img src={nthomeLogo} alt="Logo" className="brand-logo" />
                 <span className="brand-text">Nthome</span>
               </Link>
-
-              </div>
-
-              {/* Center - Search */}
-              <div className="navbar-center">
-                <form onSubmit={handleSearchSubmit} className="search-form">
-                  <div className="search-input-container">
-                    <FaSearch className="search-icon" />
-                    <input
-                      type="text"
-                      placeholder="Search drivers, customers, rides..."
-                      className="search-input"
-                      value={searchQuery}
-                      onChange={handleSearchChange}
-                      onFocus={handleSearchFocus}
-                    />
-                    <select
-                      className="search-category"
-                      value={searchCategory}
-                      onChange={(e) => setSearchCategory(e.target.value)}
-                    >
-                      <option value="all">All</option>
-                      <option value="drivers">Drivers</option>
-                      <option value="customers">Customers</option>
-                      <option value="rides">Rides</option>
-                      <option value="vehicles">Vehicles</option>
-                    </select>
-                  </div>
-                </form>
-              </div>
             </div>
-            <div className="navbar-rght-container">
-              {/* Right side - Navigation and profile */}
-              <div className="navbar-right">
-                {/* Navigation Links */}
-                <ul className="nav-links">
-                  <li className="nav-item">
-                    <Link to="/" className="nav-link">
-                      Home
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link to="/about" className="nav-link">
-                      About
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link to="/contact" className="nav-link">
-                      Contact
-                    </Link>
-                  </li>
-                  <li className="nav-item dropdown">
-                    <button className="nav-dropdown-btn" onClick={toggleSiteDropdown}>
-                      Services
-                    </button>
-                    {isSiteDropdownOpen && (
-                      <div className="dropdown-wrapper">
-                        <div className="custom-dropdown-menu">
-                          <Link to="/nthomeair" className="custom-dropdown-item">
-                            NthomeAir
-                          </Link>
-                          <Link to="/food" className="custom-dropdown-item">
-                            NthomeFood
-                          </Link>
-                        </div>
-                      </div>
-                    )}
-                  </li>
-                  {roles === "admin" && (
-                    <li className="nav-item">
-                      <Link to="/adminapp" className="nav-link active">
-                        Dashboard
-                      </Link>
-                    </li>
-                  )}
-                </ul>
+          </div>
 
-                {/* Theme Toggle */}
+          <div className="navbar-right-container">
+            <div className="navbar-right">
+              <ul className="nav-links">
+                <li><Link to="/" className="nav-link">Home</Link></li>
+                <li><Link to="/about" className="nav-link">About</Link></li>
+                <li><Link to="/contact" className="nav-link">Contact</Link></li>
+
+                {/* Services Dropdown */}
+                <li className="nav-item dropdown" ref={siteDropdownRef}>
+                  <button className="nav-dropdown-btn" onClick={toggleSiteDropdown}>
+                    Services
+                  </button>
+                  {isSiteDropdownOpen && (
+                    <div className="dropdown-wrapper">
+                      <div className="custom-dropdown-menu">
+                        <Link to="/nthomeair" className="custom-dropdown-item">NthomeAir</Link>
+                        <Link to="/food" className="custom-dropdown-item">NthomeFood</Link>
+                      </div>
+                    </div>
+                  )}
+                </li>
+
+                {user?.role === "admin" && (
+                  <li><Link to="/adminapp" className="nav-link active">Dashboard</Link></li>
+                )}
+              </ul>
+
+              {/* Theme Toggle */}
+              {user?.role === "admin" && (
                 <button
                   className="theme-toggle"
                   onClick={toggleTheme}
@@ -162,43 +146,35 @@ const Navbar = ({ toggleSidebar }) => {
                 >
                   <span className="icon">{isDark ? "☀️" : "🌙"}</span>
                 </button>
+              )}
 
-                {/* Profile Section */}
-                {userName && (
-                  <div className="profile-container">
-                    <button className="profile-btn" onClick={toggleDropdown}>
-                      <img
-                        src={profilePicture || "https://via.placeholder.com/40x40/0dcaf0/ffffff?text=JA"}
-                        alt="Profile"
-                        className="profile-img"
-                      />
-                    </button>
-
-                    {isDropdownOpen && (
-                      <div className="nav-dropdown-menu">
-                        <Link to="/profile-admin" className="dropdown-item">
-                          Profile ({userName})
-                        </Link>
-                        <Link to="/settings" className="dropdown-item">
-                          Settings
-                        </Link>
-                        <Link to="/AdminTripHistory" className="dropdown-item">
-                          Trip History <FaRoute className="me-1" />
-                        </Link>
-                        <button onClick={handleLogout} className="dropdown-item logout-btn">
-                          Logout
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
+              {/* Login/Profile */}
+              {!user ? (
+                <button onClick={handleLogin} className="login-btn">
+                  Login
+                </button>
+              ) : (
+                <div className="profile-container" ref={profileDropdownRef}>
+                  <button className="profile-btn" onClick={toggleDropdown}>
+                    <img src={profilePicture} alt="Profile" className="profile-img" />
+                  </button>
+                  {isDropdownOpen && (
+                    <div className="nav-dropdown-menu">
+                      <Link to="/profile" className="dropdown-item">
+                        Profile ({user.name})
+                      </Link>
+                      <button onClick={handleLogout} className="dropdown-item logout-btn">
+                        Logout
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
-          
+          </div>
         </div>
       </nav>
 
-      {/* Search Results Modal */}
       <SearchResults isVisible={showSearchResults} onClose={() => setShowSearchResults(false)} />
     </>
   )

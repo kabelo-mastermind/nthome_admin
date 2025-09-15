@@ -29,7 +29,7 @@ function LandingPage() {
           </div>
         </div>
       </nav> */}
-      <Navbar />
+      {/* <Navbar /> */}
       <Header />
       <Solution />
       <AppFeatures />
@@ -38,7 +38,7 @@ function LandingPage() {
       <CallToAction2 />
       <FAQs />
       <ScrollToTop />
-      <Footer />
+      {/* <Footer /> */}
       {/* Hero Section */}
       {/* <section className="hero-section">
         <div className="hero-container">

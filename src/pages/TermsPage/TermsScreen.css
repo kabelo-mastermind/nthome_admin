@@ -1,0 +1,36 @@
+.terms-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #fff;
+  color: #555;
+  line-height: 1.6;
+  font-family: Arial, sans-serif;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.terms-heading {
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+  margin-bottom: 24px;
+}
+
+.terms-content h2 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 20px;
+  color: #333;
+}
+
+.terms-content p {
+  margin: 10px 0;
+}
+
+.terms-content hr {
+  margin: 20px 0;
+  border: none;
+  border-top: 1px solid #ddd;
+}

@@ -29,7 +29,7 @@ function AdminApp({ children }) {
 
   return (
     <div className={`grid-container ${openSidebarToggle ? "sidebar-responsive" : ""}`}>
-      <Navbar toggleSidebar={toggleSidebar} />
+      {/* <Navbar toggleSidebar={toggleSidebar} /> */}
       <Sidebar 
         openSidebarToggle={openSidebarToggle} 
         toggleSidebar={toggleSidebar} 

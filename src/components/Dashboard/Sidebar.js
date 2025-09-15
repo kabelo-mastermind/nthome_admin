@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import "../../styles/AdminApp.css" // Updated path (go up 2 levels to reach src/styles)
 import {
   BsFillArchiveFill,
@@ -14,28 +14,36 @@ import {
   BsFillPersonFill,
 } from "react-icons/bs"
 import { FaRegStar, FaTachometerAlt, FaBullhorn } from "react-icons/fa"
-
+import { FaHome } from "react-icons/fa"; // add this at the top
+import { useTheme } from "../../contexts/ThemeContext"
 function Sidebar({ openSidebarToggle, toggleSidebar, isMobile }) {
   const [ridesDropdownOpen, setRidesDropdownOpen] = useState(false)
+  const { theme, toggleTheme, isDark } = useTheme()
+
 
   const toggleRidesDropdown = () => {
     setRidesDropdownOpen(!ridesDropdownOpen)
   }
-
+  // inside your component
+  const navigate = useNavigate();
   return (
-       <aside 
-      id="sidebar" 
+    <aside
+      id="sidebar"
       className={openSidebarToggle ? "sidebar-responsive" : ""}
     >
-      <div className="sidebar-title">
-        <h3>RideAdmin</h3>
-          <span 
-          className={`icon close_icon ${isMobile ? "mobile-visible" : "desktop-visible"}`} 
-          onClick={toggleSidebar}
-        >
-          ✕
-        </span>
+      <div
+        className="sidebar-title"
+        onClick={() => {
+          if (toggleSidebar) toggleSidebar(); // optional: close sidebar on mobile
+          navigate("/"); // redirect to home page
+        }}
+        style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "8px" }}
+      >
+        <h3 style={{ margin: 0 }}>Nthome</h3>
+        <FaHome className="icon home_icon" />
       </div>
+
+
       <ul className="sidebar-list">
         <li className="sidebar-list-item">
           <Link to="/adminapp">
@@ -62,23 +70,23 @@ function Sidebar({ openSidebarToggle, toggleSidebar, isMobile }) {
           </Link>
         </li>
         <li className={`sidebar-list-item ${ridesDropdownOpen ? "open" : ""}`}
-    style={{ position: 'relative', zIndex: ridesDropdownOpen ? 100 : 1 }}>
-  <div className="dropdown-toggle" onClick={toggleRidesDropdown}>
-    <BsListCheck className="icon" />
-    <span>Rides</span>
-    <span style={{ marginLeft: "auto", fontSize: "0.8rem" }}>
-      {ridesDropdownOpen ? "▼" : "▶"}
-    </span>
-  </div>
-  <ul className="dropdown-menu" style={{
-    position: 'relative',
-    zIndex: 101,
-    backgroundColor: 'var(--sidebar-bg)',
-    maxHeight: ridesDropdownOpen ? '200px' : '0',
-    overflowY: 'auto',
-    transition: 'max-height 0.3s ease-in-out',
-    boxShadow: ridesDropdownOpen ? '0 4px 12px rgba(0, 0, 0, 0.2)' : 'none'
-  }}>
+          style={{ position: 'relative', zIndex: ridesDropdownOpen ? 100 : 1 }}>
+          <div className="dropdown-toggle" onClick={toggleRidesDropdown}>
+            <BsListCheck className="icon" />
+            <span>Rides</span>
+            <span style={{ marginLeft: "auto", fontSize: "0.8rem" }}>
+              {ridesDropdownOpen ? "▼" : "▶"}
+            </span>
+          </div>
+          <ul className="dropdown-menu" style={{
+            position: 'relative',
+            zIndex: 101,
+            backgroundColor: 'var(--sidebar-bg)',
+            maxHeight: ridesDropdownOpen ? '200px' : '0',
+            overflowY: 'auto',
+            transition: 'max-height 0.3s ease-in-out',
+            boxShadow: ridesDropdownOpen ? '0 4px 12px rgba(0, 0, 0, 0.2)' : 'none'
+          }}>
             <li className="dropdown-item">
               <Link to="/adminapp/trip">
                 <BsFillCalendarCheckFill className="icon" />
@@ -148,6 +156,18 @@ function Sidebar({ openSidebarToggle, toggleSidebar, isMobile }) {
           </Link>
         </li>
       </ul>
+      <div className="theme-toggle-container">
+        <span className="theme-label">Change Theme</span>
+        <button
+          className={`theme-toggle-btn ${isDark ? "dark" : "light"}`}
+          onClick={toggleTheme}
+          title={`Switch to ${isDark ? "light" : "dark"} mode`}
+        >
+          <span className="icon">{isDark ? "☀️" : "🌙"}</span>
+        </button>
+      </div>
+
+
     </aside>
   )
 }

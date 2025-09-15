@@ -2,12 +2,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./AllRides.css";
-import { 
-  FaDownload, 
-  FaMapMarkerAlt, 
-  FaMoneyBillWave, 
-  FaUser, 
-  FaCar, 
+import {
+  FaDownload,
+  FaMapMarkerAlt,
+  FaMoneyBillWave,
+  FaUser,
+  FaCar,
   FaSearch,
   FaFilter,
   FaChevronDown,
@@ -20,6 +20,7 @@ import {
 } from "react-icons/fa";
 import { api } from "../../api";
 import { FaEdit, FaTrash } from 'react-icons/fa';
+import { useSelector } from "react-redux";
 
 // Eye Icon
 const EyeIcon = () => (
@@ -62,6 +63,9 @@ function AllRides() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [userCache, setUserCache] = useState({});
+  const user = useSelector((state) => state.auth?.user);
+  const user_id = user?.user_id;
+  console.log("user_id from redux:", user_id);
 
   // Handle edit form changes
   const handleEditChange = (field, value) => {
@@ -75,7 +79,7 @@ function AllRides() {
       const res = await axios.get(`${api}payment/${tripId}`);
       setPaymentDetails(res.data);
       console.log('Payment details fetched:', res.data);
-      
+
     } catch (error) {
       console.error('Error fetching payment details:', error);
       setPaymentDetails(null);
@@ -101,92 +105,92 @@ function AllRides() {
   };
 
   // Open edit modal
-// Open edit modal
-const openEditModal = async (ride) => {
-  try {
-    const tripId = ride.id || ride.id || ride._id;
-    if (!tripId) {
-      alert("Trip ID not found for this ride.");
-      return;
-    }
-    
-    // Fetch both trip details and payment details
-    const [tripRes, paymentRes] = await Promise.all([
-      axios.get(`${api}trip/${tripId}`),
-      axios.get(`${api}payment/${tripId}`)
-    ]);
-    
-    const tripDetails = tripRes.data;
-    const paymentData = paymentRes.data;
+  // Open edit modal
+  const openEditModal = async (ride) => {
+    try {
+      const tripId = ride.id || ride.id || ride._id;
+      if (!tripId) {
+        alert("Trip ID not found for this ride.");
+        return;
+      }
 
-    setSelectedRide(tripDetails);
-    setEditingRide(tripDetails);
-    setPaymentDetails(paymentData);
-    setEditForm({
-      pickUpLocation: tripDetails.pickUpLocation,
-      dropOffLocation: tripDetails.dropOffLocation,
-      statuses: tripDetails.statuses,
-    //   vehicle_type: tripDetails.vehicle_type,
-      pickupTime: tripDetails.pickupTime,
-      dropOffTime: tripDetails.dropOffTime,
-      distance_traveled: tripDetails.distance_traveled,
-      duration_minutes: tripDetails.duration_minutes,
-      payment_status: tripDetails.payment_status,
-      driver_ratings: tripDetails.driver_ratings,
-      customer_rating: tripDetails.customer_rating,
-      driver_feedback: tripDetails.driver_feedback,
-      customer_feedback: tripDetails.customer_feedback,
-      cancellation_reason: tripDetails.cancellation_reason,
-      cancel_by: tripDetails.cancel_by,
-    });
-  } catch (error) {
-    console.error("Error fetching trip details:", error);
-    
-    // Re-declare tripId in the catch block scope
-    const tripId = ride.id || ride.id || ride._id;
-    
-    if (error.response?.status === 404) {
-      // Payment not found, but we can still proceed with trip details
-      try {
-        const tripRes = await axios.get(`${api}trip/${tripId}`);
-        const tripDetails = tripRes.data;
-        
-        setSelectedRide(tripDetails);
-        setEditingRide(tripDetails);
-        setPaymentDetails(null);
-        
-        setEditForm({
-          pickUpLocation: tripDetails.pickUpLocation,
-          dropOffLocation: tripDetails.dropOffLocation,
-          statuses: tripDetails.statuses,
+      // Fetch both trip details and payment details
+      const [tripRes, paymentRes] = await Promise.all([
+        axios.get(`${api}trip/${tripId}`),
+        axios.get(`${api}payment/${tripId}`)
+      ]);
+
+      const tripDetails = tripRes.data;
+      const paymentData = paymentRes.data;
+
+      setSelectedRide(tripDetails);
+      setEditingRide(tripDetails);
+      setPaymentDetails(paymentData);
+      setEditForm({
+        pickUpLocation: tripDetails.pickUpLocation,
+        dropOffLocation: tripDetails.dropOffLocation,
+        statuses: tripDetails.statuses,
         //   vehicle_type: tripDetails.vehicle_type,
-          pickupTime: tripDetails.pickupTime,
-          dropOffTime: tripDetails.dropOffTime,
-          distance_traveled: tripDetails.distance_traveled,
-          duration_minutes: tripDetails.duration_minutes,
-          payment_status: tripDetails.payment_status,
-          driver_ratings: tripDetails.driver_ratings,
-          customer_rating: tripDetails.customer_rating,
-          driver_feedback: tripDetails.driver_feedback,
-          customer_feedback: tripDetails.customer_feedback,
-          cancellation_reason: tripDetails.cancellation_reason,
-          cancel_by: tripDetails.cancel_by,
-        });
-      } catch (tripError) {
-        console.error("Error fetching trip details in fallback:", tripError);
+        pickupTime: tripDetails.pickupTime,
+        dropOffTime: tripDetails.dropOffTime,
+        distance_traveled: tripDetails.distance_traveled,
+        duration_minutes: tripDetails.duration_minutes,
+        payment_status: tripDetails.payment_status,
+        driver_ratings: tripDetails.driver_ratings,
+        customer_rating: tripDetails.customer_rating,
+        driver_feedback: tripDetails.driver_feedback,
+        customer_feedback: tripDetails.customer_feedback,
+        cancellation_reason: tripDetails.cancellation_reason,
+        cancel_by: tripDetails.cancel_by,
+      });
+    } catch (error) {
+      console.error("Error fetching trip details:", error);
+
+      // Re-declare tripId in the catch block scope
+      const tripId = ride.id || ride.id || ride._id;
+
+      if (error.response?.status === 404) {
+        // Payment not found, but we can still proceed with trip details
+        try {
+          const tripRes = await axios.get(`${api}trip/${tripId}`);
+          const tripDetails = tripRes.data;
+
+          setSelectedRide(tripDetails);
+          setEditingRide(tripDetails);
+          setPaymentDetails(null);
+
+          setEditForm({
+            pickUpLocation: tripDetails.pickUpLocation,
+            dropOffLocation: tripDetails.dropOffLocation,
+            statuses: tripDetails.statuses,
+            //   vehicle_type: tripDetails.vehicle_type,
+            pickupTime: tripDetails.pickupTime,
+            dropOffTime: tripDetails.dropOffTime,
+            distance_traveled: tripDetails.distance_traveled,
+            duration_minutes: tripDetails.duration_minutes,
+            payment_status: tripDetails.payment_status,
+            driver_ratings: tripDetails.driver_ratings,
+            customer_rating: tripDetails.customer_rating,
+            driver_feedback: tripDetails.driver_feedback,
+            customer_feedback: tripDetails.customer_feedback,
+            cancellation_reason: tripDetails.cancellation_reason,
+            cancel_by: tripDetails.cancel_by,
+          });
+        } catch (tripError) {
+          console.error("Error fetching trip details in fallback:", tripError);
+          alert("Failed to load trip details");
+        }
+      } else {
         alert("Failed to load trip details");
       }
-    } else {
-      alert("Failed to load trip details");
     }
-  }
-};
+  };
 
   // Submit edit
   const submitEdit = async () => {
     try {
       setIsSubmitting(true);
-      await axios.put(`${api}trip/${editingRide.id}`, { updates: editForm, user_id:"1" });
+      await axios.put(`${api}trip/${editingRide.id}`, { updates: editForm, user_id: user_id });
       // Refresh the data
       fetchRides(false);
       setEditingRide(null);
@@ -207,7 +211,7 @@ const openEditModal = async (ride) => {
     }
 
     try {
-    await axios.delete(`${api}trip/${tripId}`, { data: { user_id: 1 } });
+      await axios.delete(`${api}trip/${tripId}`, { data: { user_id: 1 } });
       // Refresh the data
       fetchRides(false);
       setSelectedRide(null);
@@ -276,9 +280,9 @@ const openEditModal = async (ride) => {
     // eslint-disable-next-line
   }, [rides]);
 
-  useEffect(() => { 
+  useEffect(() => {
     setOffset(0);
-    fetchRides(false); 
+    fetchRides(false);
   }, [filters]);
 
   const filteredRides = rides.filter(
@@ -400,7 +404,7 @@ const openEditModal = async (ride) => {
           <button onClick={exportCSV} className="export-csv-btn">
             <FaDownload /> Export CSV
           </button>
-          <button 
+          <button
             className="filter-toggle"
             onClick={() => setShowFilters(!showFilters)}
           >
@@ -426,8 +430,8 @@ const openEditModal = async (ride) => {
           <div className="filters-panel">
             <div className="filter-group">
               <label>Status</label>
-              <select 
-                value={filters.status} 
+              <select
+                value={filters.status}
                 onChange={(e) => handleFilterChange("status", e.target.value)}
                 className="filter-select"
               >
@@ -441,21 +445,21 @@ const openEditModal = async (ride) => {
 
             <div className="filter-group">
               <label>Sort By</label>
-              <select 
-                value={filters.sortBy} 
+              <select
+                value={filters.sortBy}
                 onChange={(e) => handleFilterChange("sortBy", e.target.value)}
                 className="filter-select"
               >
                 <option value="requestDate">Request Date</option>
                 <option value="currentDate">Completion Date</option>
-                <option value="amount">Amount</option> 
+                <option value="amount">Amount</option>
               </select>
             </div>
 
             <div className="filter-group">
               <label>Order</label>
-              <select 
-                value={filters.sortOrder} 
+              <select
+                value={filters.sortOrder}
                 onChange={(e) => handleFilterChange("sortOrder", e.target.value)}
                 className="filter-select"
               >
@@ -509,8 +513,8 @@ const openEditModal = async (ride) => {
                   <span className="value">
                     {ride.driverId
                       ? (userCache[ride.driverId]
-                          ? `${userCache[ride.driverId].name} (${userCache[ride.driverId].email})`
-                          : ride.driverId)
+                        ? `${userCache[ride.driverId].name} (${userCache[ride.driverId].email})`
+                        : ride.driverId)
                       : "Not assigned"}
                   </span>
                 </div>
@@ -575,15 +579,15 @@ const openEditModal = async (ride) => {
                   value={
                     selectedRide.driverId
                       ? (userCache[selectedRide.driverId]
-                          ? `${userCache[selectedRide.driverId].name} (${userCache[selectedRide.driverId].email})`
-                          : selectedRide.driverId)
+                        ? `${userCache[selectedRide.driverId].name} (${userCache[selectedRide.driverId].email})`
+                        : selectedRide.driverId)
                       : "Not assigned"
                   }
                 />
                 <DetailItem label="Vehicle Type" value={getCarTypeName(selectedRide.vehicle_type)} />
                 <DetailItem label="Status" value={selectedRide.statuses} badgeClass={getStatusBadgeClass(selectedRide.statuses)} />
               </div>
-              
+
               <div className="detail-group">
                 <h3>Route</h3>
                 <DetailItem label="Pickup" value={selectedRide.pickUpLocation} />
@@ -591,7 +595,7 @@ const openEditModal = async (ride) => {
                 <DetailItem label="Distance" value={selectedRide.distance_traveled ? `${selectedRide.distance_traveled} km` : "N/A"} />
                 <DetailItem label="Duration" value={selectedRide.duration_minutes ? `${selectedRide.duration_minutes} min` : "N/A"} />
               </div>
-              
+
               <div className="detail-group">
                 <h3>Timing</h3>
                 <DetailItem label="Request Date" value={formatDate(selectedRide.requestDate)} />
@@ -599,24 +603,24 @@ const openEditModal = async (ride) => {
                 <DetailItem label="Dropoff Time" value={formatDate(selectedRide.dropOffTime)} />
                 <DetailItem label="Completion Date" value={formatDate(selectedRide.currentDate)} />
               </div>
-              
+
               <div className="detail-group">
                 <h3>Payment & Ratings</h3>
-                <DetailItem 
+                <DetailItem
                   label="Amount" // Changed from Fare to Amount
                   value={
                     paymentDetails && paymentDetails.amount
                       ? `${paymentDetails.currency || '$'}${paymentDetails.amount}`
                       : (selectedRide.amount ? `$${selectedRide.amount}` : "N/A") // Changed from fare to amount
-                  } 
+                  }
                 />
-                <DetailItem 
-                  label="Payment Type" 
+                <DetailItem
+                  label="Payment Type"
                   value={
                     paymentDetails && paymentDetails.paymentType
                       ? paymentDetails.paymentType
                       : (selectedRide.payment_type || "N/A")
-                  } 
+                  }
                 />
                 <DetailItem label="Payment Status" value={selectedRide.payment_status} badgeClass={getPaymentStatusClass(selectedRide.payment_status)} />
                 <DetailItem label="Driver Rating" value={selectedRide.driver_ratings || "N/A"} />
@@ -675,78 +679,78 @@ const openEditModal = async (ride) => {
       )}
 
       {/* Edit Modal */}
-    {editingRide && (
-  <div className="modal-overlay" onClick={() => setEditingRide(null)}>
-    <div className="modal-content edit-modal" onClick={(e) => e.stopPropagation()}>
-      <div className="modal-header">
-        <h2>Edit Trip #{editingRide.id}</h2>
-        <button className="modal-close" onClick={() => setEditingRide(null)}><FaTimes /></button>
-      </div>
-
-      <div className="modal-body">
-        <div className="current-values-section">
-          <h3>Current Values</h3>
-          <div className="current-values-grid">
-            <div className="current-value-item">
-              <span className="current-label">Request Date:</span>
-              <span className="current-value">{formatDate(editingRide.requestDate)}</span>
-            </div>
-            <div className="current-value-item">
-              <span className="current-label">Pickup Time:</span>
-              <span className="current-value">{formatDate(editingRide.pickupTime)}</span>
-            </div>
-            <div className="current-value-item">
-              <span className="current-label">Dropoff Time:</span>
-              <span className="current-value">{formatDate(editingRide.dropOffTime)}</span>
-            </div>
-            <div className="current-value-item">
-              <span className="current-label">Completion Date:</span>
-              <span className="current-value">{formatDate(editingRide.currentDate)}</span>
-            </div>
-            <div className="current-value-item">
-              <span className="current-label">Amount:</span>
-              <span className="current-value">
-                {paymentDetails && paymentDetails.amount
-                  ? `${paymentDetails.currency || '$'}${paymentDetails.amount}`
-                  : (editingRide.amount ? `$${editingRide.amount}` : "N/A")}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div className="form-section">
-          <h3>Trip Status & Basic Info</h3>
-          <div className="form-row">
-            <div className="form-group">
-              <label>Status *</label>
-              <select
-                value={editForm.statuses || ''}
-                onChange={(e) => handleEditChange('statuses', e.target.value)}
-                required
-              >
-                <option value="pending">Pending</option>
-                <option value="on-going">on-going</option>
-                <option value="completed">Completed</option>
-                <option value="cancelled">Cancelled</option>
-              </select>
+      {editingRide && (
+        <div className="modal-overlay" onClick={() => setEditingRide(null)}>
+          <div className="modal-content edit-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Edit Trip #{editingRide.id}</h2>
+              <button className="modal-close" onClick={() => setEditingRide(null)}><FaTimes /></button>
             </div>
 
-            <div className="form-group">
-              <label>Payment Status *</label>
-              <select
-                value={editForm.payment_status || ''}
-                onChange={(e) => handleEditChange('payment_status', e.target.value)}
-                required
-              >
-                <option value="pending">Pending</option>
-                <option value="paid">Paid</option>
-                <option value="failed">Failed</option>
-                <option value="refunded">Refunded</option>
-              </select>
-            </div>
-          </div>
+            <div className="modal-body">
+              <div className="current-values-section">
+                <h3>Current Values</h3>
+                <div className="current-values-grid">
+                  <div className="current-value-item">
+                    <span className="current-label">Request Date:</span>
+                    <span className="current-value">{formatDate(editingRide.requestDate)}</span>
+                  </div>
+                  <div className="current-value-item">
+                    <span className="current-label">Pickup Time:</span>
+                    <span className="current-value">{formatDate(editingRide.pickupTime)}</span>
+                  </div>
+                  <div className="current-value-item">
+                    <span className="current-label">Dropoff Time:</span>
+                    <span className="current-value">{formatDate(editingRide.dropOffTime)}</span>
+                  </div>
+                  <div className="current-value-item">
+                    <span className="current-label">Completion Date:</span>
+                    <span className="current-value">{formatDate(editingRide.currentDate)}</span>
+                  </div>
+                  <div className="current-value-item">
+                    <span className="current-label">Amount:</span>
+                    <span className="current-value">
+                      {paymentDetails && paymentDetails.amount
+                        ? `${paymentDetails.currency || '$'}${paymentDetails.amount}`
+                        : (editingRide.amount ? `$${editingRide.amount}` : "N/A")}
+                    </span>
+                  </div>
+                </div>
+              </div>
 
-          {/* <div className="form-row">
+              <div className="form-section">
+                <h3>Trip Status & Basic Info</h3>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Status *</label>
+                    <select
+                      value={editForm.statuses || ''}
+                      onChange={(e) => handleEditChange('statuses', e.target.value)}
+                      required
+                    >
+                      <option value="pending">Pending</option>
+                      <option value="on-going">on-going</option>
+                      <option value="completed">Completed</option>
+                      <option value="cancelled">Cancelled</option>
+                    </select>
+                  </div>
+
+                  <div className="form-group">
+                    <label>Payment Status *</label>
+                    <select
+                      value={editForm.payment_status || ''}
+                      onChange={(e) => handleEditChange('payment_status', e.target.value)}
+                      required
+                    >
+                      <option value="pending">Pending</option>
+                      <option value="paid">Paid</option>
+                      <option value="failed">Failed</option>
+                      <option value="refunded">Refunded</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* <div className="form-row">
             <div className="form-group">
               <label>Vehicle Type</label>
               <select
@@ -759,174 +763,174 @@ const openEditModal = async (ride) => {
               </select>
             </div>
           </div> */}
+              </div>
+
+              <div className="form-section">
+                <h3>Route Information</h3>
+                <div className="form-group">
+                  <label>Pickup Location *</label>
+                  <input
+                    type="text"
+                    value={editForm.pickUpLocation || ''}
+                    onChange={(e) => handleEditChange('pickUpLocation', e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Dropoff Location *</label>
+                  <input
+                    type="text"
+                    value={editForm.dropOffLocation || ''}
+                    onChange={(e) => handleEditChange('dropOffLocation', e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Distance (km)</label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      min="0"
+                      value={editForm.distance_traveled || ''}
+                      onChange={(e) => handleEditChange('distance_traveled', e.target.value)}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Duration (min)</label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={formatDate(editForm.duration_minutes || '')}
+                      onChange={(e) => handleEditChange('duration_minutes', e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-section">
+                <h3>Timing Information</h3>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Pickup Time</label>
+                    <input
+                      type="datetime-local"
+                      value={editForm.pickupTime ? editForm.pickupTime.slice(0, 16) : ''}
+                      onChange={(e) => handleEditChange('pickupTime', e.target.value)}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Dropoff Time</label>
+                    <input
+                      type="datetime-local"
+                      value={editForm.dropOffTime ? editForm.dropOffTime.slice(0, 16) : ''}
+                      onChange={(e) => handleEditChange('dropOffTime', e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-section">
+                <h3>Ratings & Feedback</h3>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Driver Rating (1-5)</label>
+                    <input
+                      type="number"
+                      min="1"
+                      max="5"
+                      step="0.1"
+                      value={editForm.driver_ratings || ''}
+                      onChange={(e) => handleEditChange('driver_ratings', e.target.value)}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Customer Rating (1-5)</label>
+                    <input
+                      type="number"
+                      min="1"
+                      max="5"
+                      step="0.1"
+                      value={editForm.customer_rating || ''}
+                      onChange={(e) => handleEditChange('customer_rating', e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label>Driver Feedback</label>
+                  <textarea
+                    value={editForm.driver_feedback || ''}
+                    onChange={(e) => handleEditChange('driver_feedback', e.target.value)}
+                    rows="2"
+                    placeholder="Optional driver feedback..."
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Customer Feedback</label>
+                  <textarea
+                    value={editForm.customer_feedback || ''}
+                    onChange={(e) => handleEditChange('customer_feedback', e.target.value)}
+                    rows="2"
+                    placeholder="Optional customer feedback..."
+                  />
+                </div>
+              </div>
+
+              {editingRide.cancellation_reason && (
+                <div className="form-section">
+                  <h3>Cancellation Details</h3>
+                  <div className="form-group">
+                    <label>Cancellation Reason</label>
+                    <input
+                      type="text"
+                      value={editForm.cancellation_reason || editingRide.cancellation_reason || ''}
+                      onChange={(e) => handleEditChange('cancellation_reason', e.target.value)}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Cancelled By</label>
+                    <select
+                      value={editForm.cancel_by || editingRide.cancel_by || ''}
+                      onChange={(e) => handleEditChange('cancel_by', e.target.value)}
+                    >
+                      <option value="">Select who cancelled</option>
+                      <option value="customer">Customer</option>
+                      <option value="driver">Driver</option>
+                      <option value="system">System</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </div>
+                </div>
+              )}
+
+              <div className="modal-actions">
+                <button
+                  className="cancel-btn"
+                  onClick={() => setEditingRide(null)}
+                  disabled={isSubmitting}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="save-btn"
+                  onClick={submitEdit}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <div className="form-section">
-          <h3>Route Information</h3>
-          <div className="form-group">
-            <label>Pickup Location *</label>
-            <input
-              type="text"
-              value={editForm.pickUpLocation || ''}
-              onChange={(e) => handleEditChange('pickUpLocation', e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Dropoff Location *</label>
-            <input
-              type="text"
-              value={editForm.dropOffLocation || ''}
-              onChange={(e) => handleEditChange('dropOffLocation', e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="form-row">
-            <div className="form-group">
-              <label>Distance (km)</label>
-              <input
-                type="number"
-                step="0.1"
-                min="0"
-                value={editForm.distance_traveled || ''}
-                onChange={(e) => handleEditChange('distance_traveled', e.target.value)}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Duration (min)</label>
-              <input
-                type="number"
-                min="0"
-                value={formatDate( editForm.duration_minutes || '')}
-                onChange={(e) => handleEditChange('duration_minutes', e.target.value)}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="form-section">
-          <h3>Timing Information</h3>
-          <div className="form-row">
-            <div className="form-group">
-              <label>Pickup Time</label>
-              <input
-                type="datetime-local"
-                value={editForm.pickupTime ? editForm.pickupTime.slice(0, 16) : ''}
-                onChange={(e) => handleEditChange('pickupTime', e.target.value)}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Dropoff Time</label>
-              <input
-                type="datetime-local"
-                value={editForm.dropOffTime ? editForm.dropOffTime.slice(0, 16) : ''}
-                onChange={(e) => handleEditChange('dropOffTime', e.target.value)}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="form-section">
-          <h3>Ratings & Feedback</h3>
-          <div className="form-row">
-            <div className="form-group">
-              <label>Driver Rating (1-5)</label>
-              <input
-                type="number"
-                min="1"
-                max="5"
-                step="0.1"
-                value={editForm.driver_ratings || ''}
-                onChange={(e) => handleEditChange('driver_ratings', e.target.value)}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Customer Rating (1-5)</label>
-              <input
-                type="number"
-                min="1"
-                max="5"
-                step="0.1"
-                value={editForm.customer_rating || ''}
-                onChange={(e) => handleEditChange('customer_rating', e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className="form-group">
-            <label>Driver Feedback</label>
-            <textarea
-              value={editForm.driver_feedback || ''}
-              onChange={(e) => handleEditChange('driver_feedback', e.target.value)}
-              rows="2"
-              placeholder="Optional driver feedback..."
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Customer Feedback</label>
-            <textarea
-              value={editForm.customer_feedback || ''}
-              onChange={(e) => handleEditChange('customer_feedback', e.target.value)}
-              rows="2"
-              placeholder="Optional customer feedback..."
-            />
-          </div>
-        </div>
-
-        {editingRide.cancellation_reason && (
-          <div className="form-section">
-            <h3>Cancellation Details</h3>
-            <div className="form-group">
-              <label>Cancellation Reason</label>
-              <input
-                type="text"
-                value={editForm.cancellation_reason || editingRide.cancellation_reason || ''}
-                onChange={(e) => handleEditChange('cancellation_reason', e.target.value)}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Cancelled By</label>
-              <select
-                value={editForm.cancel_by || editingRide.cancel_by || ''}
-                onChange={(e) => handleEditChange('cancel_by', e.target.value)}
-              >
-                <option value="">Select who cancelled</option>
-                <option value="customer">Customer</option>
-                <option value="driver">Driver</option>
-                <option value="system">System</option>
-                <option value="admin">Admin</option>
-              </select>
-            </div>
-          </div>
-        )}
-
-        <div className="modal-actions">
-          <button 
-            className="cancel-btn" 
-            onClick={() => setEditingRide(null)}
-            disabled={isSubmitting}
-          >
-            Cancel
-          </button>
-          <button 
-            className="save-btn" 
-            onClick={submitEdit}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? 'Saving...' : 'Save Changes'}
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-)}
+      )}
     </div>
   );
 }
