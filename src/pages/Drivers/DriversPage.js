@@ -27,6 +27,7 @@ const TrashIcon = () => (
   </svg>
 );
 
+
 function DriversPage() {
   const [drivers, setDrivers] = useState([]);
   const [loading, setLoading] = useState(true);
