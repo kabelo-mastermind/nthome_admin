@@ -1,0 +1,52 @@
+/* FoodComingSoon.css */
+
+/* body {
+    margin: 0; 
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa; 
+} */
+
+.air-coming-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+    text-align: center; /* Center text alignment */
+    position: relative; /* Position for absolute elements */
+}
+
+.air-coming-container h1 {
+    font-size: 6rem; /* Large font size */
+    color: #333; /* Dark gray text color */
+    animation: fadeIn 1s ease-in-out; /* Fade-in animation */
+}
+
+/* Background styling */
+.air-coming-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('../../assets/img/plane.jpg'); /* Add your background image */
+    background-size: cover; /* Cover the entire container */
+    background-position: center; /* Center the background image */
+    opacity: 0.5; /* Slightly transparent */
+    z-index: -1; /* Send background behind the text */
+}
+
+/* Text shadow for better readability */
+.air-coming-container h1 {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Add shadow for depth */
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+    from {
+        opacity: 0; /* Start fully transparent */
+    }
+    to {
+        opacity: 1; /* End fully opaque */
+    }
+}

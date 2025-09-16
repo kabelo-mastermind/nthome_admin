@@ -58,7 +58,6 @@ const TrashIcon = () => (
     <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4a2 2 0 012 2v2H7V5a2 2 0 012-2z" />
   </svg>
 );
-const API_BASE = "https://tech-wise-server-brown.vercel.app/api";
 
 const Subscribers = () => {
   const [subscribers, setSubscribers] = useState([]);
@@ -84,7 +83,7 @@ const Subscribers = () => {
     const fetchSubscribers = async () => {
       try {
         const res = await axios.get(
-          `${API_BASE}/active_drivers_simple`
+          `${api}active_drivers_simple`
         );
         setSubscribers(res.data.drivers || []);
       } catch (err) {
@@ -128,7 +127,7 @@ const Subscribers = () => {
       if (result.isConfirmed) {
         try {
           const res = await fetch(
-            `${API_BASE}/drivers/subscription/:subscription_id?id=${subscription_id}`,
+            `${api}drivers/subscription/:subscription_id?id=${subscription_id}`,
             {
               method: "DELETE",
             }

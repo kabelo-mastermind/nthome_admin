@@ -13,7 +13,6 @@ import {
   FaWallet,
   FaClock
 } from "react-icons/fa";
-const API_BASE = "https://tech-wise-server-brown.vercel.app/api";
 
 export default function DriverEarnings() {
   const [selectedDriver, setSelectedDriver] = useState(null);
@@ -32,7 +31,7 @@ export default function DriverEarnings() {
     const fetchDriverEarnings = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${API_BASE}/drivers/earnings`);
+        const response = await fetch(`${api}drivers/earnings`);
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

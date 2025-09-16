@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "./contexts/redux/store";
-
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { SearchProvider } from "./contexts/SearchContext";
 import AdminApp from "./AdminApp";
@@ -26,6 +25,7 @@ import CancelledRides from "./pages/CancelledRides/CancelledRides";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import SignUpPage from "./pages/SignUpPage/SignUpPage";
 import TeamPage from "./pages/Admin/TeamPage";
+import Contact from "./pages/Contact/Contact"; // Import Contact component
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Toaster } from "react-hot-toast";
 import TermsPage from "./pages/TermsPage/TermsPage";
@@ -34,6 +34,9 @@ import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage/ForgotPasswordPage";
 import Profile from "./pages/Profile/Profile";
+import NthomeAir from "./pages/NthomeServices/NthomeAir";
+import NthomeFood from "./pages/NthomeServices/NthomeFood";
+
 
 // Layout for all public/non-admin pages
 const PublicLayout = ({ children }) => (
@@ -104,7 +107,7 @@ function App() {
                     </PublicLayout>
                   }
                 />
-                  <Route
+                <Route
                   path="/profile"
                   element={
                     <PublicLayout>
@@ -112,14 +115,33 @@ function App() {
                     </PublicLayout>
                   }
                 />
-                   {/* <Route
-                  path="/profile"
+                {/* Add Contact route */}
+                <Route
+                  path="/contact"
                   element={
                     <PublicLayout>
-                      <DriverProfile />
+                      <Contact />
                     </PublicLayout>
                   }
-                /> */}
+                />
+                 {/* Add Nhome Air */}
+                <Route
+                  path="/nthomeair"
+                  element={
+                    <PublicLayout>
+                      <NthomeAir />
+                    </PublicLayout>
+                  }
+                />
+                 {/* Add Nhome food */}
+                <Route
+                  path="/nthomefood"
+                  element={
+                    <PublicLayout>
+                      <NthomeFood />
+                    </PublicLayout>
+                  }
+                />
 
                 {/* Admin-only routes */}
                 <Route

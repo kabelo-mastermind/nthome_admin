@@ -115,7 +115,7 @@ const Navbar = ({ toggleSidebar }) => {
               <ul className="nav-links">
                 <li><Link to="/" className="nav-link">Home</Link></li>
                 <li><Link to="/about" className="nav-link">About</Link></li>
-                <li><Link to="/contact" className="nav-link">Contact</Link></li>
+                <li><Link to="/Contact" className="nav-link">Contact</Link></li>
 
                 {/* Services Dropdown */}
                 <li className="nav-item dropdown" ref={siteDropdownRef}>
@@ -126,7 +126,7 @@ const Navbar = ({ toggleSidebar }) => {
                     <div className="dropdown-wrapper">
                       <div className="custom-dropdown-menu">
                         <Link to="/nthomeair" className="custom-dropdown-item">NthomeAir</Link>
-                        <Link to="/food" className="custom-dropdown-item">NthomeFood</Link>
+                        <Link to="/NthomeFood" className="custom-dropdown-item">NthomeFood</Link>
                       </div>
                     </div>
                   )}
