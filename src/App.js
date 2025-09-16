@@ -36,6 +36,7 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage/ForgotPasswordPage";
 import Profile from "./pages/Profile/Profile";
 import NthomeAir from "./pages/NthomeServices/NthomeAir";
 import NthomeFood from "./pages/NthomeServices/NthomeFood";
+import About from './pages/About/About';
 
 
 // Layout for all public/non-admin pages
@@ -124,6 +125,15 @@ function App() {
                     </PublicLayout>
                   }
                 />
+                {/* Add Contact route */}
+                <Route
+                  path="/about"
+                  element={
+                    <PublicLayout>
+                      <About />
+                    </PublicLayout>
+                  }
+                />
                  {/* Add Nhome Air */}
                 <Route
                   path="/nthomeair"
@@ -166,6 +176,7 @@ function App() {
                           <Route path="completedRides" element={<CompletedRides />} />
                           <Route path="cancelled" element={<CancelledRides />} />
                           <Route path="team" element={<TeamPage />} />
+                          
                         </Routes>
                       </AdminApp>
                     </ProtectedRoute>
