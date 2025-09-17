@@ -2,27 +2,25 @@ import React, { useState } from 'react';
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import { IoIosCall, IoIosMail, IoLogoFacebook, IoLogoTwitter, IoLogoInstagram, IoIosPin, IoIosSend } from 'react-icons/io';
-import { format } from 'date-fns-tz';
 import toast, { Toaster } from 'react-hot-toast';
 import './Contact.css';
 import ScrollToTop from '../LandingPage/LandingpageSections/ScrollToTop/ScrollToTopButton';
-
 
 const Contact = ({ emails }) => {
   const navigate = useNavigate();
 
   const [values, setValues] = useState({
+    name: '',
     subject: '',
     email: emails || '',
     message: ''
   });
-  
+
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInput = (e) => {
     setValues(prev => ({ ...prev, [e.target.name]: e.target.value }));
-    // Clear error when user starts typing
     if (errors[e.target.name]) {
       setErrors(prev => ({ ...prev, [e.target.name]: '' }));
     }
@@ -31,6 +29,11 @@ const Contact = ({ emails }) => {
   const validateForm = () => {
     let isValid = true;
     const errors = {};
+
+    if (!values.name.trim()) {
+      errors.name = 'Name is required';
+      isValid = false;
+    }
 
     if (!values.subject.trim()) {
       errors.subject = 'Subject is required';
@@ -56,31 +59,38 @@ const Contact = ({ emails }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       toast.error("Please correct the errors in the form.");
       return;
     }
 
     setIsSubmitting(true);
-    
-    try {
-      const currentDate = format(new Date(), 'yyyy-MM-dd', { timeZone: 'Africa/Johannesburg' });
 
+    try {
       const formData = {
-        ...values,
+        name: values.name,
         email: emails || values.email,
-        contact_date: currentDate
+        subject: values.subject,
+        message: values.message
       };
 
-      await axios.post('http://localhost:8085/contact', formData);
+      await axios.post('http://localhost:3000/api/contactUS', formData);
       toast.success("Message sent successfully!");
       setTimeout(() => {
         navigate('/thankyou');
       }, 2000);
     } catch (error) {
-      console.error('Error sending message:', error);
-      toast.error("Failed to send message. Please try again.");
+      if (error.response) {
+        console.error('Error response:', error.response.data);
+        toast.error(`Failed to send message: ${error.response.data.message || 'Please try again.'}`);
+      } else if (error.request) {
+        console.error('Error request:', error.request);
+        toast.error("No response from server. Please try again later.");
+      } else {
+        console.error('Error:', error.message);
+        toast.error("An unexpected error occurred.");
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -131,10 +141,10 @@ const Contact = ({ emails }) => {
           {/* Contact Information */}
           <div className="contact-info-section">
             <h2>Contact Information</h2>
-<p className="contact-info-description">
-  Our team is here to assist you with all courier needs. 
-  Reach us via phone, email, or social platforms.
-</p>
+            <p className="contact-info-description">
+              Our team is here to assist you with all courier needs. 
+              Reach us via phone, email, or social platforms.
+            </p>
 
             <div className="contact-info-card">
               <div className="contact-info-item">
@@ -218,6 +228,19 @@ const Contact = ({ emails }) => {
           <div className="contact-form-section">
             <h2>Send us a Message</h2>
             <form onSubmit={handleSubmit} className="contact-form">
+              <div className={`form-group ${errors.name ? 'error' : ''}`}>
+                <label htmlFor="name">Name</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="Your full name"
+                  value={values.name}
+                  onChange={handleInput}
+                />
+                {errors.name && <span className="error-message">{errors.name}</span>}
+              </div>
+
               <div className={`form-group ${errors.email ? 'error' : ''}`}>
                 <label htmlFor="email">Email Address</label>
                 <input
@@ -296,7 +319,6 @@ const Contact = ({ emails }) => {
       </div>
 
       <ScrollToTop />
-      
     </>
   );
 };
