@@ -5,6 +5,7 @@ import { IoIosCall, IoIosMail, IoLogoFacebook, IoLogoTwitter, IoLogoInstagram, I
 import toast, { Toaster } from 'react-hot-toast';
 import './Contact.css';
 import ScrollToTop from '../LandingPage/LandingpageSections/ScrollToTop/ScrollToTopButton';
+import { api } from "../../api";
 
 const Contact = ({ emails }) => {
   const navigate = useNavigate();
@@ -75,7 +76,7 @@ const Contact = ({ emails }) => {
         message: values.message
       };
 
-      await axios.post('http://localhost:3000/api/contactUS', formData);
+      await axios.post(`${api}/contactUS`, formData);
       toast.success("Message sent successfully!");
       setTimeout(() => {
         navigate('/thankyou');
